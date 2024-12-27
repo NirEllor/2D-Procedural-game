@@ -8,7 +8,6 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
 import pepse.world.trees.Sky;
-import pepse.world.trees.Block;
 
 public class PepseGameManager extends GameManager {
 
