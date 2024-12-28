@@ -7,7 +7,10 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
+import pepse.world.trees.Block;
 import pepse.world.trees.Sky;
+import pepse.world.trees.Terrain;
+import java.util.List;
 
 public class PepseGameManager extends GameManager {
 
@@ -17,8 +20,12 @@ public class PepseGameManager extends GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
 
         Vector2 windowDimensions = windowController.getWindowDimensions();
-
+        Terrain terrain = new Terrain(windowDimensions, 42);
         gameObjects().addGameObject(Sky.create(windowDimensions), Layer.BACKGROUND);
+        List<Block> blocks = terrain.createInRange(0, (int) windowDimensions.x());
+        for (Block b : blocks) {
+            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+        }
 
 //        GameObject cloud1 = createCloud(this.windowDimensions, new Vector2(200, 100)); // ענן ראשון
 //        GameObject cloud2 = createCloud(this.windowDimensions, new Vector2(500, 150)); // ענן שני
