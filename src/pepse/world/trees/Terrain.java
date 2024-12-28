@@ -12,7 +12,6 @@ public class Terrain {
 
     public static final float SHRINK_HEIGHT = (float) 2 / 3;
     public static final String GROUND = "ground";
-    private Vector2 windowDimensions;
     private final float groundHeightAtX0;
     private final NoiseGenerator noiseGenerator;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
@@ -20,7 +19,6 @@ public class Terrain {
 
     public Terrain(Vector2 windowDimensions, int seed) {
 
-        this.windowDimensions = windowDimensions;
         this.groundHeightAtX0 = windowDimensions.y() * SHRINK_HEIGHT;
         this.noiseGenerator = new NoiseGenerator(seed, (int) Math.floor(groundHeightAtX0));
 
