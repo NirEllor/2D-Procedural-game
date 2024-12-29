@@ -1,4 +1,4 @@
-package pepse.world.trees;
+package pepse.world;
 
 import danogl.GameObject;
 import danogl.components.GameObjectPhysics;

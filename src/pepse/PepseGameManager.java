@@ -1,15 +1,20 @@
 package pepse;
 
 import danogl.GameManager;
+import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
-import pepse.world.trees.Block;
-import pepse.world.trees.Sky;
-import pepse.world.trees.Terrain;
+import pepse.world.daynight.Night;
+import pepse.world.Block;
+import pepse.world.Sky;
+import pepse.world.Terrain;
+import pepse.world.daynight.Sun;
+import pepse.world.daynight.SunHalo;
+
 import java.util.List;
 
 public class PepseGameManager extends GameManager {
@@ -17,15 +22,30 @@ public class PepseGameManager extends GameManager {
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
                                WindowController windowController) {
+
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
+        windowController.setTargetFramerate(60);
 
         Vector2 windowDimensions = windowController.getWindowDimensions();
         Terrain terrain = new Terrain(windowDimensions, 42);
+
         gameObjects().addGameObject(Sky.create(windowDimensions), Layer.BACKGROUND);
+
+        GameObject sun = Sun.create(windowDimensions, 30);
+        gameObjects().addGameObject(sun, Layer.STATIC_OBJECTS);
+
+        GameObject sunHalo = SunHalo.create(sun);
+        gameObjects().addGameObject(sunHalo, Layer.BACKGROUND);
+
         List<Block> blocks = terrain.createInRange(0, (int) windowDimensions.x());
         for (Block b : blocks) {
             gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
         }
+
+        GameObject night = Night.create(windowDimensions, 30);
+        gameObjects().addGameObject(night, Layer.BACKGROUND);
+
+
 
 //        GameObject cloud1 = createCloud(this.windowDimensions, new Vector2(200, 100)); // ענן ראשון
 //        GameObject cloud2 = createCloud(this.windowDimensions, new Vector2(500, 150)); // ענן שני

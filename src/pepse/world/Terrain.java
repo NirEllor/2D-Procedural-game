@@ -1,9 +1,9 @@
-package pepse.world.trees;
+package pepse.world;
 
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
-import pepse.ColorSupplier;
-import pepse.NoiseGenerator;
+import pepse.util.ColorSupplier;
+import pepse.util.NoiseGenerator;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,13 @@ public class Terrain {
         this.groundHeightAtX0 = windowDimensions.y() * SHRINK_HEIGHT;
         this.noiseGenerator = new NoiseGenerator(seed, (int) Math.floor(groundHeightAtX0));
 
-
-
     }
+
     public float groundHeightAt(float x) {
        float noise = (float) noiseGenerator.noise(x, Block.SIZE * 7);
        return groundHeightAtX0 + noise;
     }
+
     public List<Block> createInRange(int minX, int maxX) {
         List<Block> blocks = new ArrayList<>();
         int minXFloor = (int) Math.floor((float) minX / Block.SIZE);
@@ -47,6 +47,5 @@ public class Terrain {
         return blocks;
 
     }
-
 
 }
