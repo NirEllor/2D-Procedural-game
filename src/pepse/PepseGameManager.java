@@ -14,7 +14,9 @@ import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
+import pepse.world.trees.Flora;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PepseGameManager extends GameManager {
@@ -45,6 +47,12 @@ public class PepseGameManager extends GameManager {
         GameObject night = Night.create(windowDimensions, 30);
         gameObjects().addGameObject(night, Layer.BACKGROUND);
 
+        Flora flora = new Flora(terrain);
+        ArrayList<GameObject> trees = flora.createInRange(0, (int) windowDimensions.x());
+
+        for (GameObject tree : trees) {
+            gameObjects().addGameObject(tree, Layer.STATIC_OBJECTS);
+        }
 
 
 //        GameObject cloud1 = createCloud(this.windowDimensions, new Vector2(200, 100)); // ענן ראשון

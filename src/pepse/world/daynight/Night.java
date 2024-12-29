@@ -13,7 +13,8 @@ public class Night {
 
     private static final float INITIAL_OPACITY = 0f; // התחלה
     private static final float MIDNIGHT_OPACITY = 0.5f; // סיום
-    private static final float TRANSITION_TIME = 43200f; // זמן המעבר בשניות
+    // TODO: change to 43200 to lifetime trans
+    private static final float TRANSITION_TIME = 15f; // זמן המעבר בשניות
 
     public static GameObject create(Vector2 windowDimensions, float cycleLength){
         Renderable blackRectangle = new RectangleRenderable(new Color(0, 0, 0, 1f));
