@@ -5,6 +5,7 @@ import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.PepseGameManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,14 +15,14 @@ import static pepse.world.trees.Tree.LEAF_SIZE;
 
 public class Leaves {
 
-    public static ArrayList<GameObject> create(Vector2 position, Random random) {
+    public static ArrayList<GameObject> create(Vector2 position) {
         ArrayList<GameObject> leaves = new ArrayList<>();
 
-        int leafCount = random.nextInt(30, 50);
+        int leafCount = PepseGameManager.RANDOM.nextInt(30, 50);
         for (int i = 0; i < leafCount; i++) {
 
-            int xOffset = random.nextInt(-70, 70);
-            int yOffset = random.nextInt(-20, 100);
+            int xOffset = PepseGameManager.RANDOM.nextInt(-70, 70);
+            int yOffset = PepseGameManager.RANDOM.nextInt(-20, 100);
 
             GameObject leaf = new GameObject(new Vector2((position.x() + xOffset),
                     position.y() - yOffset),
@@ -29,7 +30,7 @@ public class Leaves {
                     new RectangleRenderable(LEAF_COLOR));
 
 
-            float delay = random.nextFloat(2);
+            float delay = PepseGameManager.RANDOM.nextFloat(2);
             addDelayedMovement(leaf, delay);
 
             leaves.add(leaf);
