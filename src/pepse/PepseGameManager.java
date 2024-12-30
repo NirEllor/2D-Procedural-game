@@ -8,6 +8,7 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
+import pepse.world.Avatar;
 import pepse.world.daynight.Cloud;
 import pepse.world.daynight.Night;
 import pepse.world.Block;
@@ -24,6 +25,8 @@ import java.util.Random;
 
 public class PepseGameManager extends GameManager {
     public static final Random RANDOM = new Random();
+    private static final int AVATAR_TERRAIN_DIST = 100;
+
 
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
@@ -75,6 +78,12 @@ public class PepseGameManager extends GameManager {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
             }
         }
+
+        // create Avatar
+        float xInitialAvatarLocation = windowDimensions.mult(0.5f).x();
+        float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
+        Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
+        Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
 
     }
 

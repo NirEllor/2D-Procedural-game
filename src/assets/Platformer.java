@@ -1,3 +1,5 @@
+package assets;
+
 import danogl.*;
 import danogl.collisions.Layer;
 import danogl.components.*;

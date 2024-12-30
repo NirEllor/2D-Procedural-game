@@ -1,4 +1,4 @@
-package pepse.util.pepse.assets;
+package assets.pepse.assets;
 
 public class NoiseGenerator {
 	private double seed;
