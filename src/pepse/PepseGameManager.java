@@ -84,7 +84,7 @@ public class PepseGameManager extends GameManager {
         float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
-
+        gameObjects().addGameObject(avatar);
     }
 
     public void run() {
