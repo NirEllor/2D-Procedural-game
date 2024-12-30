@@ -23,6 +23,21 @@ public class Avatar  extends GameObject {
     public static final int IDLE_ENERGY_GAIN = 1;
     public static final int MAX_ENERGY = 100;
     public static final int MIN_ENERGY = 0;
+    public static final int FACTOR = 50;
+    public static final String SRC_ASSETS_IDLE_0_PNG = "src/assets/idle_0.png";
+    public static final String SRC_ASSETS_IDLE_1_PNG = "src/assets/idle_1.png";
+    public static final String SRC_ASSETS_IDLE_2_PNG = "src/assets/idle_2.png";
+    public static final String SRC_ASSETS_IDLE_3_PNG = "src/assets/idle_3.png";
+    public static final String SRC_ASSETS_RUN_0_PNG = "src/assets/run_0.png";
+    public static final String SRC_ASSETS_RUN_1_PNG = "src/assets/run_1.png";
+    public static final String SRC_ASSETS_RUN_2_PNG = "src/assets/run_2.png";
+    public static final String SRC_ASSETS_RUN_3_PNG = "src/assets/run_3.png";
+    public static final String SRC_ASSETS_RUN_4_PNG = "src/assets/run_4.png";
+    public static final String SRC_ASSETS_RUN_5_PNG = "src/assets/run_5.png";
+    public static final String SRC_ASSETS_JUMP_0_PNG = "src/assets/jump_0.png";
+    public static final String SRC_ASSETS_JUMP_1_PNG = "src/assets/jump_1.png";
+    public static final String SRC_ASSETS_JUMP_2_PNG = "src/assets/jump_2.png";
+    public static final String SRC_ASSETS_JUMP_3_PNG = "src/assets/jump_3.png";
 
     private final UserInputListener inputListener;
     private final ImageReader imageReader;
@@ -44,7 +59,7 @@ public class Avatar  extends GameObject {
                   UserInputListener inputListener,
                   ImageReader imageReader) {
 
-        super(topLeftCorner, Vector2.ONES.mult(50), new OvalRenderable(AVATAR_COLOR));
+        super(topLeftCorner, Vector2.ONES.mult(FACTOR), new OvalRenderable(AVATAR_COLOR));
         this.inputListener = inputListener;
         this.imageReader = imageReader;
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
@@ -88,29 +103,29 @@ public class Avatar  extends GameObject {
     private void readImages() {
 
          idleAnimations = new Renderable[]{
-                imageReader.readImage("src/assets/idle_0.png", true),
-                imageReader.readImage("src/assets/idle_1.png", true),
-                imageReader.readImage("src/assets/idle_2.png", true),
-                imageReader.readImage("src/assets/idle_3.png", true)
+                imageReader.readImage(SRC_ASSETS_IDLE_0_PNG, true),
+                imageReader.readImage(SRC_ASSETS_IDLE_1_PNG, true),
+                imageReader.readImage(SRC_ASSETS_IDLE_2_PNG, true),
+                imageReader.readImage(SRC_ASSETS_IDLE_3_PNG, true)
         };
         runAnimations = new Renderable[]{
 
-                imageReader.readImage("src/assets/run_0.png", true),
-                imageReader.readImage("src/assets/run_1.png", true),
-                imageReader.readImage("src/assets/run_2.png", true),
-                imageReader.readImage("src/assets/run_3.png", true),
-                imageReader.readImage("src/assets/run_4.png", true),
-                imageReader.readImage("src/assets/run_5.png", true)
+                imageReader.readImage(SRC_ASSETS_RUN_0_PNG, true),
+                imageReader.readImage(SRC_ASSETS_RUN_1_PNG, true),
+                imageReader.readImage(SRC_ASSETS_RUN_2_PNG, true),
+                imageReader.readImage(SRC_ASSETS_RUN_3_PNG, true),
+                imageReader.readImage(SRC_ASSETS_RUN_4_PNG, true),
+                imageReader.readImage(SRC_ASSETS_RUN_5_PNG, true)
         };
         jumpAnimations = new Renderable[]{
-                imageReader.readImage("src/assets/jump_0.png", true),
-        imageReader.readImage("src/assets/jump_1.png", true),
-        imageReader.readImage("src/assets/jump_2.png", true),
-        imageReader.readImage("src/assets/jump_3.png", true)
+                imageReader.readImage(SRC_ASSETS_JUMP_0_PNG, true),
+        imageReader.readImage(SRC_ASSETS_JUMP_1_PNG, true),
+        imageReader.readImage(SRC_ASSETS_JUMP_2_PNG, true),
+        imageReader.readImage(SRC_ASSETS_JUMP_3_PNG, true)
         };
 
         idleAnimation = new AnimationRenderable(idleAnimations, 1F);
-        runAnimation = new AnimationRenderable(runAnimations, 0.5F);
+        runAnimation = new AnimationRenderable(runAnimations, 1F);
         jumpAnimation = new AnimationRenderable(jumpAnimations, 1F);
 
     }
