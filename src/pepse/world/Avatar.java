@@ -19,13 +19,15 @@ public class Avatar  extends GameObject {
     private static final float VELOCITY_X = 400;
     private static final float VELOCITY_Y = -650;
     public static final float RUN_ENERGY_LOSS = 0.5F;
-    public static final int JUMP_ENERGY_LOSS = 10;
+    public static final int JUMP_ENERGY_LOSS = 11;
     public static final int IDLE_ENERGY_GAIN = 1;
+    public static final int MAX_ENERGY = 100;
+    public static final int MIN_ENERGY = 0;
 
     private final UserInputListener inputListener;
     private final ImageReader imageReader;
-    private final float terrainY;
-    private Terrain terrain;
+    private boolean touchingTerrain;
+
 
     private float energy;
     Renderable[] idleAnimations;
@@ -45,20 +47,41 @@ public class Avatar  extends GameObject {
         super(topLeftCorner, Vector2.ONES.mult(50), new OvalRenderable(AVATAR_COLOR));
         this.inputListener = inputListener;
         this.imageReader = imageReader;
-        this.terrainY = topLeftCorner.y();
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
         readImages();
-        energy = 100;
+        energy = MAX_ENERGY;
+        touchingTerrain = false;
 
     }
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if(other.getTag().equals(Block.BLOCK_TAG)){
-            this.transform().setVelocityY(0);
+        if(other.getTag().equals(Block.BLOCK_TAG)) {
+            this.transform().setVelocityY(MIN_ENERGY);
         }
+        if (other.getTag().equals(Terrain.GROUND)){
+            this.touchingTerrain = true;
+        }
+    }
+
+    @Override
+    public void onCollisionStay(GameObject other, Collision collision) {
+        super.onCollisionStay(other, collision);
+        if (other.getTag().equals(Terrain.GROUND)) {
+            this.touchingTerrain = true;
+
+        }
+    }
+
+    @Override
+    public void onCollisionExit(GameObject other) {
+        super.onCollisionExit(other);
+        if (other.getTag().equals(Terrain.GROUND)) {
+            this.touchingTerrain = false;
+        }
+
     }
 
 
@@ -87,61 +110,58 @@ public class Avatar  extends GameObject {
         };
 
         idleAnimation = new AnimationRenderable(idleAnimations, 1F);
-        runAnimation = new AnimationRenderable(runAnimations, 0.2F);
+        runAnimation = new AnimationRenderable(runAnimations, 0.5F);
         jumpAnimation = new AnimationRenderable(jumpAnimations, 1F);
 
     }
-
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        float xVel = 0;
+        float xVel = MIN_ENERGY;
 
-        // Run Left
-        if(inputListener.isKeyPressed(KeyEvent.VK_LEFT) &&
-                !(inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) && (energy >= RUN_ENERGY_LOSS)) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT) && !inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && energy >= RUN_ENERGY_LOSS) {
+            handleRunning(true);
             xVel -= VELOCITY_X;
-            renderer().setIsFlippedHorizontally(true);
-            energy = Math.max(0, energy - RUN_ENERGY_LOSS);
-            updateAvatarRunImage();
-
-        }
-        // Run Right
-        else if(inputListener.isKeyPressed(KeyEvent.VK_RIGHT) &&
-                !(inputListener.isKeyPressed(KeyEvent.VK_LEFT)) && (energy >= RUN_ENERGY_LOSS)) {
+        } else if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && !inputListener.isKeyPressed(KeyEvent.VK_LEFT) && energy >= RUN_ENERGY_LOSS) {
+            handleRunning(false);
             xVel += VELOCITY_X;
-            renderer().setIsFlippedHorizontally(false);
-            energy = Math.max(0, energy - RUN_ENERGY_LOSS);
-            updateAvatarRunImage();
-
+        } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && energy >= JUMP_ENERGY_LOSS && getVelocity().y() == MIN_ENERGY) {
+            handleJumping();
+        } else {
+            handleIdle();
         }
-        // Jump
-        else if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && (getVelocity().y() == 0) &&
-                        (energy >= JUMP_ENERGY_LOSS)) {
-            transform().setVelocityY(VELOCITY_Y * 0.75F);
-            if (getTopLeftCorner().y() <= terrain.groundHeightAt(getTopLeftCorner().x())) {
-                energy = Math.max(0, energy - JUMP_ENERGY_LOSS);
-
-            }
-
-
-            updateAvatarJumpImage();
-
-        }
-        // Idle stay
-        else {
-            System.out.println(getTopLeftCorner().y());
-            System.out.println(terrain.groundHeightAt(getTopLeftCorner().x()));
-            if (getTopLeftCorner().y() >= terrain.groundHeightAt(getTopLeftCorner().x())) {
-                energy = Math.min(100, energy + IDLE_ENERGY_GAIN);
-                System.out.println(energy);
-
-            }
-                updateAvatarIdleImage();
-            }
         transform().setVelocityX(xVel);
+        System.out.println(energy);
+    }
 
 
+    private void decreaseEnergy(float amount) {
+        energy = Math.max(MIN_ENERGY, energy - amount);
+    }
+
+    private void increaseEnergy() {
+        energy = Math.min(MAX_ENERGY, energy + IDLE_ENERGY_GAIN);
+    }
+
+    private void handleRunning(boolean isLeft) {
+        float velocityChange = isLeft ? -VELOCITY_X : VELOCITY_X;
+        transform().setVelocityX(velocityChange);
+        renderer().setIsFlippedHorizontally(isLeft);
+        decreaseEnergy(RUN_ENERGY_LOSS);
+        updateAvatarRunImage();
+    }
+
+    private void handleJumping() {
+        transform().setVelocityY(VELOCITY_Y * 0.5F);
+        decreaseEnergy(JUMP_ENERGY_LOSS);
+        updateAvatarJumpImage();
+    }
+
+    private void handleIdle() {
+        if (touchingTerrain) {
+            increaseEnergy();
+        }
+        updateAvatarIdleImage();
     }
 
 
@@ -164,7 +184,4 @@ public class Avatar  extends GameObject {
         return energy;
     }
 
-    public void setTerrain(Terrain terrain) {
-        this.terrain = terrain;
-    }
 }

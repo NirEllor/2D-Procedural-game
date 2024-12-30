@@ -25,7 +25,7 @@ import java.util.Random;
 
 public class PepseGameManager extends GameManager {
     public static final Random RANDOM = new Random();
-    private static final int AVATAR_TERRAIN_DIST = 120;
+    private static final int AVATAR_TERRAIN_DIST = 100;
 
 
     @Override
@@ -84,7 +84,6 @@ public class PepseGameManager extends GameManager {
         float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
-        avatar.setTerrain(terrain);
         gameObjects().addGameObject(avatar);
     }
 
