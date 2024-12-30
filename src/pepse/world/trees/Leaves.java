@@ -15,14 +15,19 @@ import static pepse.world.trees.Tree.LEAF_SIZE;
 
 public class Leaves {
 
-    public static ArrayList<GameObject> create(Vector2 position) {
+    public static ArrayList<GameObject> create(Vector2 position, Random rand) {
         ArrayList<GameObject> leaves = new ArrayList<>();
 
-        int leafCount = PepseGameManager.RANDOM.nextInt(30, 50);
+        int leafCount = rand.nextInt(100);
+        leafCount = Math.max(leafCount, 30);
         for (int i = 0; i < leafCount; i++) {
 
-            int xOffset = PepseGameManager.RANDOM.nextInt(-70, 70);
-            int yOffset = PepseGameManager.RANDOM.nextInt(-20, 100);
+            int xOffset = rand.nextInt( 70);
+            int minus = rand.nextBoolean() ? 1 : -1;
+            xOffset *= minus;
+            int yOffset = rand.nextInt(100);
+            minus = rand.nextBoolean() ? 1 : -1/3;
+            yOffset *= minus;
 
             GameObject leaf = new GameObject(new Vector2((position.x() + xOffset),
                     position.y() - yOffset),
@@ -30,7 +35,7 @@ public class Leaves {
                     new RectangleRenderable(LEAF_COLOR));
 
 
-            float delay = PepseGameManager.RANDOM.nextFloat(2);
+            float delay = rand.nextFloat();
             addDelayedMovement(leaf, delay);
 
             leaves.add(leaf);

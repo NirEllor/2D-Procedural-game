@@ -12,6 +12,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.Math.max;
+
 public class Tree {
 
     private static final Color TRUNK_COLOR = new Color(100, 50, 20);
@@ -20,7 +22,7 @@ public class Tree {
     public static final int LEAF_SIZE = 20;  // גודל העלים
 
 
-    public static void create(ArrayList<TreeInfo> trees, Terrain terrain, int x) {
+    public static void create(ArrayList<TreeInfo> trees, Terrain terrain, int x, Random rand) {
         float groundHeight = terrain.groundHeightAt(x);
         Vector2 treePosition = new Vector2(x, groundHeight - 100);
 
@@ -28,9 +30,10 @@ public class Tree {
         GameObject trunk = new GameObject(treePosition, new Vector2(30, 100), trunkRenderer);
         trunk.setTag("TreeTrunk");
 
-        ArrayList<GameObject> leaves = Leaves.create(treePosition);
-        int fruitAmount = PepseGameManager.RANDOM.nextInt(5);
-        ArrayList<GameObject> fruits = Fruits.createFruits(treePosition, fruitAmount);
+        ArrayList<GameObject> leaves = Leaves.create(treePosition, rand);
+        int fruitAmount = rand.nextInt(12);
+        fruitAmount = max(3, fruitAmount);
+        ArrayList<GameObject> fruits = Fruits.createFruits(treePosition, fruitAmount, rand);
 
         TreeInfo tree = new TreeInfo(trunk, leaves, fruits);
         trees.add(tree);

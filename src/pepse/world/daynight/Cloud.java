@@ -31,7 +31,7 @@ public class Cloud {
     public static ArrayList<GameObject> createCloud(Vector2 position) {
         ArrayList<GameObject> cloudBlocks = new ArrayList<>();
 
-        float delay = PepseGameManager.RANDOM.nextFloat(1);
+        float delay = PepseGameManager.RANDOM.nextFloat();
         // Iterate over the cloud shape array
         for (int row = 0; row < cloudShape.length; row++) {
             for (int col = 0; col < cloudShape[row].length; col++) {

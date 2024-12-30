@@ -18,11 +18,18 @@ public class Fruits {
     private static final int ENERGY_GAIN = 10;
 
 
-    public static ArrayList<GameObject> createFruits(Vector2 position, int fruitCount) {
+    public static ArrayList<GameObject> createFruits(Vector2 position, int fruitCount, Random rand) {
         ArrayList<GameObject> fruits = new ArrayList<>();
         for (int i = 0; i < fruitCount; i++) {
-            int xOffset = PepseGameManager.RANDOM.nextInt(-60, 60);
-            int yOffset = PepseGameManager.RANDOM.nextInt(-10, 90);
+            int xOffset = rand.nextInt(60);
+            int minus = rand.nextBoolean() ? 1 : -1;
+            xOffset *= minus;
+            int yOffset = rand.nextInt(90);
+//            minus = rand.nextBoolean() ? 1 : -1/9;
+//            yOffset *= minus;
+//            Random rand = new Random();
+//            int xOffset = PepseGameManager.RANDOM.nextInt(-60, 60);
+//            int yOffset = PepseGameManager.RANDOM.nextInt(-10, 90);
 
             Vector2 fruitPosition = new Vector2(position.x() + xOffset, position.y() - yOffset);
             GameObject fruit = createFruit(fruitPosition);
