@@ -42,6 +42,7 @@ public class Avatar  extends GameObject {
     public static final String SRC_ASSETS_JUMP_1_PNG = "src/assets/jump_1.png";
     public static final String SRC_ASSETS_JUMP_2_PNG = "src/assets/jump_2.png";
     public static final String SRC_ASSETS_JUMP_3_PNG = "src/assets/jump_3.png";
+    public static final String AVATAR = "avatar";
 
     private final UserInputListener inputListener;
     private final ImageReader imageReader;
@@ -75,6 +76,7 @@ public class Avatar  extends GameObject {
         readImages();
         energy = MAX_ENERGY;
         touchingTerrain = false;
+        setTag(AVATAR);
 
     }
 
@@ -177,7 +179,7 @@ public class Avatar  extends GameObject {
         float velocityChange = isLeft ? -VELOCITY_X : VELOCITY_X;
         transform().setVelocityX(velocityChange);
         renderer().setIsFlippedHorizontally(isLeft);
-        if (getVelocity().y() != 0 && touchingTerrain) {
+        if (touchingTerrain) {
             decreaseEnergy(RUN_ENERGY_LOSS);
             updateAvatarRunImage();
         }

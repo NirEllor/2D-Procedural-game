@@ -1,6 +1,7 @@
 package pepse.world.trees;
 
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.components.ScheduledTask;
 import danogl.util.Vector2;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import danogl.gui.rendering.OvalRenderable;
 import pepse.PepseGameManager;
+import pepse.world.Avatar;
 
 public class Fruits {
 
@@ -42,20 +44,29 @@ public class Fruits {
     public static GameObject createFruit(Vector2 position) {
         // יצירת פרי
         OvalRenderable fruitRenderer = new OvalRenderable(FRUIT_COLOR);
-        GameObject fruit = new GameObject(position, new Vector2(FRUIT_SIZE, FRUIT_SIZE), fruitRenderer);
+        GameObject fruit = new GameObject(position, new Vector2(FRUIT_SIZE, FRUIT_SIZE), fruitRenderer) {
+            @Override
+            public void onCollisionEnter(GameObject other, Collision collision) {
+                super.onCollisionEnter(other, collision);
+                if (other.getTag().equals(Avatar.AVATAR)) {
+                    setCenter(new Vector2(-100, -100));
+                    respawnFruit(this);
+
+                }
+            }
+        };
         fruit.setTag(FRUIT);
         return fruit;
     }
 
-    // TODO : need to be checked after avatar will be written
-    public static void handleCollision(GameObject fruit, GameObject character, Runnable onEaten) {
-        if (fruit.getTag().equals(FRUIT) && character.getTag().equals("Player")) {
-            fruit.setCenter(new Vector2(-100, -100));
-            // TODO: add energy
-            //onEaten.run();  // פעולה שתוגדר להענקת נקודות אנרגיה
-            respawnFruit(fruit);
-        }
-    }
+//    // TODO : Delete when Yuli approves
+//    public static void handleCollision(GameObject fruit, GameObject character, Runnable onEaten) {
+//        if (fruit.getTag().equals(FRUIT) && character.getTag().equals("Player")) {
+//            fruit.setCenter(new Vector2(-100, -100));
+//            //onEaten.run();  // פעולה שתוגדר להענקת נקודות אנרגיה
+//            respawnFruit(fruit);
+//        }
+//    }
 
     //TODO - how to get back to the center if the tree moves?
     private static void respawnFruit(GameObject fruit) {
