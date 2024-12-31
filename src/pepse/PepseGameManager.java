@@ -114,7 +114,6 @@ public class PepseGameManager extends GameManager {
                     cloudBlock.getCenter(),
                     new Vector2(RAIN_DROP_SIZE, RAIN_DROP_SIZE),
                     new RectangleRenderable(RAIN_DROP_COLOR)
-
             );
 
             rainDrop.transform().setAccelerationY(GRAVITY);
@@ -132,7 +131,6 @@ public class PepseGameManager extends GameManager {
                                                     RAIN_DROP_COLOR.getBlue(), (int) (alpha * 255))
                                     )
                             );
-                            System.out.println(rainDrop.renderer().getRenderable());
                         }
                     },
                     1f, // Starting alpha
