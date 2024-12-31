@@ -11,11 +11,13 @@ import pepse.util.ColorSupplier;
 import java.awt.*;
 import java.util.ArrayList;
 
+
 public class Cloud {
 
     private static final Color BASE_CLOUD_COLOR = new Color(255, 255, 255);
     private static final int BLOCK_SIZE = 30; // גודל כל בלוק בענן
     private static final float CLOUD_SPEED = 50f; // מהירות הענן (פיקסלים בשנייה)
+    private static final float GRAVITY = 600 ;
     static int[][] cloudShape = new int[][]{
             {0, 1, 1, 0, 0, 0},
             {1, 1, 1, 0, 1, 0},
@@ -78,25 +80,6 @@ public class Cloud {
     }
 
 
-    public static void makeRain(ArrayList<GameObject> cloudBlocks) {
-        for (GameObject block : cloudBlocks) {
-            // Apply a rain effect to each cloud block
-            new Transition<>(
-                    block,
-                    (Float t) -> spawnRainParticle(block), // Logic to spawn raindrops
-                    0f, // Start value (not used here)
-                    1f, // End value (not used here)
-                    Transition.LINEAR_INTERPOLATOR_FLOAT, // Interpolation type
-                    5f, // Duration of the rain effect in seconds
-                    Transition.TransitionType.TRANSITION_LOOP, // Continuous rain
-                    null // No final action
-            );
-        }
-    }
-
-    private static void spawnRainParticle(GameObject block) {
-        // Logic to spawn a raindrop below the cloud block
-    }
 
 }
 

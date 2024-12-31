@@ -157,7 +157,7 @@ public class Avatar  extends GameObject {
             xVel += VELOCITY_X;
         } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && energy >= JUMP_ENERGY_LOSS && getVelocity().y() == MIN_ENERGY) {
             handleJumping();
-            Cloud.makeRain(cloudBlocks);
+//            Cloud.makeRain(cloudBlocks);
         } else {
             handleIdle();
         }
