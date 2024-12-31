@@ -17,7 +17,6 @@ public class Fruits {
     private static final int FRUIT_SIZE = 15;
     private static final int RESPAWN_TIME = 30;
     private static final Color FRUIT_COLOR = new Color(255, 100, 100);
-    private static final int ENERGY_GAIN = 10;
     public static final String FRUIT = "Fruit";
 
 
