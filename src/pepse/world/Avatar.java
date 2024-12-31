@@ -88,10 +88,10 @@ public class Avatar  extends GameObject {
             this.touchingTerrain = true;
 
         }
-//        if (other.getTag().equals(Fruits.FRUIT)) {
-//            System.out.println("fruit");
-//            increaseEnergy(JUMP_ENERGY_LOSS);
-//        }
+        if (other.getTag().equals(Fruits.FRUIT)) {
+            System.out.println("fruit");
+            increaseEnergy(JUMP_ENERGY_LOSS);
+        }
     }
 
     @Override
