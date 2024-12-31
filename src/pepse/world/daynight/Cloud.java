@@ -17,7 +17,6 @@ public class Cloud {
     private static final Color BASE_CLOUD_COLOR = new Color(255, 255, 255);
     private static final int BLOCK_SIZE = 30; // גודל כל בלוק בענן
     private static final float CLOUD_SPEED = 50f; // מהירות הענן (פיקסלים בשנייה)
-    private static final float GRAVITY = 600 ;
     static int[][] cloudShape = new int[][]{
             {0, 1, 1, 0, 0, 0},
             {1, 1, 1, 0, 1, 0},

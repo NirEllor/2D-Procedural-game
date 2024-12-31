@@ -8,7 +8,6 @@ import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.world.daynight.Cloud;
 import pepse.world.trees.Fruits;
 
 import java.awt.Color;
@@ -50,6 +49,8 @@ public class Avatar  extends GameObject {
     private ArrayList<GameObject> cloudBlocks;
 
     private EnergyUpdateCallback energyUpdateCallback;
+    private Runnable rainCallback;
+
 
 
 
@@ -91,7 +92,6 @@ public class Avatar  extends GameObject {
 
         }
         if (other.getTag().equals(Fruits.FRUIT)) {
-            System.out.println("fruit");
             increaseEnergy(JUMP_ENERGY_LOSS);
         }
     }
@@ -162,7 +162,6 @@ public class Avatar  extends GameObject {
             handleIdle();
         }
         transform().setVelocityX(xVel);
-        System.out.println(energy);
         energyUpdateCallback.onEnergyUpdate((int) energy);
     }
 
@@ -193,6 +192,8 @@ public class Avatar  extends GameObject {
         transform().setVelocityY(VELOCITY_Y * 0.5F);
         decreaseEnergy(JUMP_ENERGY_LOSS);
         updateAvatarJumpImage();
+        rainCallback.run();
+
     }
 
     private void handleIdle() {
@@ -218,6 +219,10 @@ public class Avatar  extends GameObject {
 
     public void setEnergyUpdateCallback(EnergyUpdateCallback callback) {
         this.energyUpdateCallback = callback;
+    }
+
+    public void setRainCallback(Runnable rainCallback) {
+        this.rainCallback = rainCallback;
     }
 
 
