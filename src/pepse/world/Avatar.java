@@ -86,8 +86,10 @@ public class Avatar  extends GameObject {
         }
         if (other.getTag().equals(Terrain.GROUND)){
             this.touchingTerrain = true;
+
         }
         if (other.getTag().equals(Fruits.FRUIT)) {
+            System.out.println("fruit");
             increaseEnergy(JUMP_ENERGY_LOSS);
         }
     }
@@ -175,8 +177,14 @@ public class Avatar  extends GameObject {
         float velocityChange = isLeft ? -VELOCITY_X : VELOCITY_X;
         transform().setVelocityX(velocityChange);
         renderer().setIsFlippedHorizontally(isLeft);
-        decreaseEnergy(RUN_ENERGY_LOSS);
-        updateAvatarRunImage();
+        if (getVelocity().y() != 0) {
+            decreaseEnergy(RUN_ENERGY_LOSS);
+            updateAvatarRunImage();
+        }
+        else {
+            updateAvatarIdleImage();
+        }
+
     }
 
     private void handleJumping() {
