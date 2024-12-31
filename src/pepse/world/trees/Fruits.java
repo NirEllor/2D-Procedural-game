@@ -16,6 +16,7 @@ public class Fruits {
     private static final int RESPAWN_TIME = 30;
     private static final Color FRUIT_COLOR = new Color(255, 100, 100);
     private static final int ENERGY_GAIN = 10;
+    public static final String FRUIT = "Fruit";
 
 
     public static ArrayList<GameObject> createFruits(Vector2 position, int fruitCount, Random rand) {
@@ -42,13 +43,13 @@ public class Fruits {
         // יצירת פרי
         OvalRenderable fruitRenderer = new OvalRenderable(FRUIT_COLOR);
         GameObject fruit = new GameObject(position, new Vector2(FRUIT_SIZE, FRUIT_SIZE), fruitRenderer);
-        fruit.setTag("Fruit");
+        fruit.setTag(FRUIT);
         return fruit;
     }
 
     // TODO : need to be checked after avatar will be written
     public static void handleCollision(GameObject fruit, GameObject character, Runnable onEaten) {
-        if (fruit.getTag().equals("Fruit") && character.getTag().equals("Player")) {
+        if (fruit.getTag().equals(FRUIT) && character.getTag().equals("Player")) {
             fruit.setCenter(new Vector2(-100, -100));
             // TODO: add energy
             //onEaten.run();  // פעולה שתוגדר להענקת נקודות אנרגיה

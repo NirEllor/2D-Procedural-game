@@ -8,12 +8,9 @@ import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.util.Vector2;
-import pepse.world.Avatar;
+import pepse.world.*;
 import pepse.world.daynight.Cloud;
 import pepse.world.daynight.Night;
-import pepse.world.Block;
-import pepse.world.Sky;
-import pepse.world.Terrain;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Flora;
@@ -26,6 +23,10 @@ import java.util.Random;
 public class PepseGameManager extends GameManager {
     public static final Random RANDOM = new Random();
     private static final int AVATAR_TERRAIN_DIST = 100;
+    private static final float NUMERIC_LIFE_SIZE = 2000;
+    private static final float NUMERIC_LIFE_SPACE_X = 160;
+    private static final float NUMERIC_LIFE_SPACE_Y = 36;
+
 
 
     @Override
@@ -70,10 +71,10 @@ public class PepseGameManager extends GameManager {
             }
         }
 
+        ArrayList<GameObject> cloud = null;
         for (int i = 0; i < 6; i++) {
-            ArrayList<GameObject> cloud = Cloud.createCloud(
-                    new Vector2(-200*(i), 100*(i%3+1) ));
-
+            cloud = Cloud.createCloud(
+                    new Vector2(-200 * (i), 100 * (i % 3 + 1)));
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
             }
@@ -84,6 +85,15 @@ public class PepseGameManager extends GameManager {
         float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
+        avatar.setCloud(cloud);
+        EnergyDisplay energyDisplay = new EnergyDisplay(
+                new Vector2(windowDimensions.x() * 0.5F, 20),
+                new Vector2(100, 30)
+                );
+        gameObjects().addGameObject(energyDisplay);
+        avatar.setEnergyUpdateCallback(energyDisplay::run);
+
+
         gameObjects().addGameObject(avatar);
     }
 

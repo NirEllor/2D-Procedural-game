@@ -8,8 +8,12 @@ import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.world.daynight.Cloud;
+import pepse.world.trees.Fruits;
+
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 
 public class Avatar  extends GameObject {
@@ -42,6 +46,10 @@ public class Avatar  extends GameObject {
     private final UserInputListener inputListener;
     private final ImageReader imageReader;
     private boolean touchingTerrain;
+    private ArrayList<GameObject> cloudBlocks;
+
+    private EnergyUpdateCallback energyUpdateCallback;
+
 
 
     private float energy;
@@ -78,6 +86,9 @@ public class Avatar  extends GameObject {
         }
         if (other.getTag().equals(Terrain.GROUND)){
             this.touchingTerrain = true;
+        }
+        if (other.getTag().equals(Fruits.FRUIT)) {
+            increaseEnergy(JUMP_ENERGY_LOSS);
         }
     }
 
@@ -142,11 +153,13 @@ public class Avatar  extends GameObject {
             xVel += VELOCITY_X;
         } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && energy >= JUMP_ENERGY_LOSS && getVelocity().y() == MIN_ENERGY) {
             handleJumping();
+            Cloud.makeRain(cloudBlocks);
         } else {
             handleIdle();
         }
         transform().setVelocityX(xVel);
         System.out.println(energy);
+        energyUpdateCallback.onEnergyUpdate((int) energy);
     }
 
 
@@ -154,8 +167,8 @@ public class Avatar  extends GameObject {
         energy = Math.max(MIN_ENERGY, energy - amount);
     }
 
-    private void increaseEnergy() {
-        energy = Math.min(MAX_ENERGY, energy + IDLE_ENERGY_GAIN);
+    private void increaseEnergy(float amount) {
+        energy = Math.min(MAX_ENERGY, energy + amount);
     }
 
     private void handleRunning(boolean isLeft) {
@@ -174,7 +187,7 @@ public class Avatar  extends GameObject {
 
     private void handleIdle() {
         if (touchingTerrain) {
-            increaseEnergy();
+            increaseEnergy(IDLE_ENERGY_GAIN);
         }
         updateAvatarIdleImage();
     }
@@ -192,6 +205,12 @@ public class Avatar  extends GameObject {
         renderer().setRenderable(runAnimation);
     }
 
+
+    public void setEnergyUpdateCallback(EnergyUpdateCallback callback) {
+        this.energyUpdateCallback = callback;
+    }
+
+
     public void setEnergy(float energy) {
         this.energy = energy;
     }
@@ -199,4 +218,7 @@ public class Avatar  extends GameObject {
         return energy;
     }
 
+    public void setCloud(ArrayList<GameObject> cloudBlocks) {
+        this.cloudBlocks = cloudBlocks;
+    }
 }

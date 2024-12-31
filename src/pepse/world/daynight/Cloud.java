@@ -8,11 +8,8 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.PepseGameManager;
 import pepse.util.ColorSupplier;
-import pepse.world.trees.Flora;
-
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Cloud {
 
@@ -78,6 +75,27 @@ public class Cloud {
                 false,
                 () -> cloudMovement(block)
         );
+    }
+
+
+    public static void makeRain(ArrayList<GameObject> cloudBlocks) {
+        for (GameObject block : cloudBlocks) {
+            // Apply a rain effect to each cloud block
+            new Transition<>(
+                    block,
+                    (Float t) -> spawnRainParticle(block), // Logic to spawn raindrops
+                    0f, // Start value (not used here)
+                    1f, // End value (not used here)
+                    Transition.LINEAR_INTERPOLATOR_FLOAT, // Interpolation type
+                    5f, // Duration of the rain effect in seconds
+                    Transition.TransitionType.TRANSITION_LOOP, // Continuous rain
+                    null // No final action
+            );
+        }
+    }
+
+    private static void spawnRainParticle(GameObject block) {
+        // Logic to spawn a raindrop below the cloud block
     }
 
 }
