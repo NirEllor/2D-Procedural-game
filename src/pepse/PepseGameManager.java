@@ -104,7 +104,7 @@ public class PepseGameManager extends GameManager {
                 new Vector2(windowDimensions.x() * 0.5F, 20),
                 new Vector2(100, 30)
         );
-        gameObjects().addGameObject(energyDisplay);
+        gameObjects().addGameObject(energyDisplay, Layer.UI);
         avatar.setEnergyUpdateCallback(energyDisplay::run);
 
 

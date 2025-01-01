@@ -85,31 +85,34 @@ public class Avatar  extends GameObject {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if(other.getTag().equals(Block.BLOCK_TAG)) {
+
+        if (other.getTag().equals(Block.BLOCK_TAG)) {
             this.transform().setVelocityY(MIN_ENERGY);
         }
-        if (other.getTag().equals(Terrain.GROUND)){
-            this.touchingTerrain = true;
 
+        if (other.getTag().equals(Terrain.GROUND)) {
+            this.touchingTerrain = true;
         }
+
         if (other.getTag().equals(Fruits.FRUIT)) {
             increaseEnergy(JUMP_ENERGY_LOSS);
         }
+
     }
 
-    @Override
-    public boolean shouldCollideWith(GameObject other) {
-        return !(other.getTag().equals(Tree.TREE_TRUNK));
-    }
 
     @Override
     public void onCollisionStay(GameObject other, Collision collision) {
         super.onCollisionStay(other, collision);
+
         if (other.getTag().equals(Terrain.GROUND)) {
             this.touchingTerrain = true;
+        }
 
+        if (other.getTag().equals(Tree.TREE_TRUNK)) {
         }
     }
+
 
     @Override
     public void onCollisionExit(GameObject other) {
@@ -117,7 +120,6 @@ public class Avatar  extends GameObject {
         if (other.getTag().equals(Terrain.GROUND)) {
             this.touchingTerrain = false;
         }
-
     }
 
 
@@ -163,7 +165,6 @@ public class Avatar  extends GameObject {
             xVel += VELOCITY_X;
         } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && energy >= JUMP_ENERGY_LOSS && getVelocity().y() == MIN_ENERGY) {
             handleJumping();
-//            Cloud.makeRain(cloudBlocks);
         } else {
             handleIdle();
         }
