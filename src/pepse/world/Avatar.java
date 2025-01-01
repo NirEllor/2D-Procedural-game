@@ -80,6 +80,7 @@ public class Avatar  extends GameObject {
         touchingTerrain = false;
         setTag(AVATAR);
 
+
     }
 
     @Override

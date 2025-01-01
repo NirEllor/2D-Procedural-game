@@ -9,6 +9,7 @@ import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
@@ -109,6 +110,10 @@ public class PepseGameManager extends GameManager {
 
 
         gameObjects().addGameObject(avatar);
+
+        setCamera(new Camera(avatar, Vector2.ZERO,
+                windowController.getWindowDimensions(),
+                windowController.getWindowDimensions()));
     }
 
     private void addDelayedMovement(GameObject block, float delay) {
