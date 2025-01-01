@@ -102,15 +102,17 @@ public class PepseGameManager extends GameManager {
         avatar.setRainCallback(() -> createRain(finalCloud));
 
         EnergyDisplay energyDisplay = new EnergyDisplay(
-                new Vector2(windowDimensions.x() * 0.5F, 20),
+                new Vector2(windowDimensions.x() * 0.5F, 250),
                 new Vector2(100, 30)
         );
-        gameObjects().addGameObject(energyDisplay, Layer.UI);
+        gameObjects().addGameObject(energyDisplay);
         avatar.setEnergyUpdateCallback(energyDisplay::run);
 
 
         gameObjects().addGameObject(avatar);
 
+//        float x =  windowController.getWindowDimensions().x() * 0.5f - initialAvatarLocation.x() * 0.5f;
+//        float y = windowController.getWindowDimensions().y() * 0.5f - initialAvatarLocation.y() * 0.5f;
         setCamera(new Camera(avatar, Vector2.ZERO,
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));

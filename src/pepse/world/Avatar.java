@@ -116,7 +116,6 @@ public class Avatar  extends GameObject {
                 );
 
                 // Treat the tree trunk as terrain
-                this.touchingTerrain = true;
             } else {
                 // Restrict movement into the tree trunk from the sides
                 resolveSideCollision(collisionNormal);
@@ -148,7 +147,6 @@ public class Avatar  extends GameObject {
                 );
 
                 // Treat the tree trunk as terrain
-                this.touchingTerrain = true;
             } else {
                 // Restrict movement into the tree trunk from the sides
                 resolveSideCollision(collisionNormal);
@@ -160,7 +158,7 @@ public class Avatar  extends GameObject {
     public void onCollisionExit(GameObject other) {
         super.onCollisionExit(other);
 
-        if (other.getTag().equals(Terrain.GROUND) || other.getTag().equals(Tree.TREE_TRUNK)) {
+        if (other.getTag().equals(Terrain.GROUND)) {
             this.touchingTerrain = false;
         }
     }
@@ -175,7 +173,7 @@ public class Avatar  extends GameObject {
         // If the avatar is moving into the tree trunk, neutralize the movement in that direction
         if (dotProduct < 0) {
             this.transform().setVelocity(
-                    velocity.subtract(collisionNormal.mult(dotProduct)).subtract(velocity)
+                    velocity.subtract(collisionNormal.mult(dotProduct))
             );
         }
     }
