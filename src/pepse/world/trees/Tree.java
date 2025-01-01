@@ -29,7 +29,15 @@ public class Tree {
         Vector2 treePosition = new Vector2(x, groundHeight - 100);
 
         RectangleRenderable trunkRenderer = new RectangleRenderable(TRUNK_COLOR);
-        GameObject trunk = new GameObject(treePosition, new Vector2(30, 100), trunkRenderer);
+        GameObject trunk = new GameObject(treePosition, new Vector2(30, 100), trunkRenderer) {
+            @Override
+            public boolean shouldCollideWith(GameObject other) {
+                if (other.getTag().equals(Avatar.AVATAR)) {
+                    return true;
+                }
+                return super.shouldCollideWith(other);
+            }
+        };
         trunk.setTag(TREE_TRUNK);
 
         ArrayList<GameObject> leaves = Leaves.create(treePosition, rand);

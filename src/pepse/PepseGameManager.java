@@ -71,9 +71,9 @@ public class PepseGameManager extends GameManager {
         //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
         // the leaves should NOT collide with the player
         for (TreeInfo tree : trees) {
-            gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
+            gameObjects().addGameObject(tree.getTree());
             for (GameObject leaf : tree.getLeaves()) {
-                gameObjects().addGameObject(leaf, Layer.BACKGROUND);
+                gameObjects().addGameObject(leaf, Layer.STATIC_OBJECTS);
 
             }
             for (GameObject fruit : tree.getFruits()) {
@@ -126,7 +126,7 @@ public class PepseGameManager extends GameManager {
                 rainDrop,
                 alpha -> {
                     if (alpha <= 0) {
-                        gameObjects().removeGameObject(rainDrop);
+                        gameObjects().removeGameObject(rainDrop, Layer.UI);
                     } else {
                         rainDrop.renderer().setRenderable(
                                 new OvalRenderable(
