@@ -10,9 +10,12 @@ import java.awt.*;
 
 public class Sun {
 
+    private static final float SHRINK_HEIGHT = (float) 2 / 3;
+
     public static GameObject create(Vector2 windowDimensions, float cycleLength){
 
-        Vector2 initialSunCenter = new Vector2(windowDimensions.x() / 2,windowDimensions.y() / 2);
+        float y = windowDimensions.y() * SHRINK_HEIGHT;
+        Vector2 initialSunCenter = new Vector2(windowDimensions.x() / 2, y/2);
 
         GameObject sun = new GameObject(initialSunCenter,
                  new Vector2(100, 100), new OvalRenderable(Color.YELLOW));
@@ -20,7 +23,7 @@ public class Sun {
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
         // TODO : check with nir what to choose
-        Vector2 cycleCenter = new Vector2(windowDimensions.x() / 2, windowDimensions.y() - 50);  // The ground center
+        Vector2 cycleCenter = new Vector2(windowDimensions.x() / 2, y);  // The ground center
 
 
         new Transition<Float>(sun, (Float angle) -> sun.setCenter(initialSunCenter.subtract(cycleCenter).

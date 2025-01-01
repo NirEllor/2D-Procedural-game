@@ -3,11 +3,13 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.world.*;
@@ -79,10 +81,12 @@ public class PepseGameManager extends GameManager {
             }
         }
 
+        ArrayList<ArrayList<GameObject>> allClouds = new ArrayList<>();
         ArrayList<GameObject> cloud = null;
         for (int i = 0; i < 6; i++) {
             cloud = Cloud.createCloud(
                     new Vector2(-200 * (i), 100 * (i % 3 + 1)));
+            allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
             }
@@ -92,8 +96,8 @@ public class PepseGameManager extends GameManager {
         float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
-        avatar.setCloud(cloud);
-        ArrayList<GameObject> finalCloud = cloud;
+        avatar.setCloud(allClouds);
+        ArrayList<ArrayList<GameObject>> finalCloud = allClouds;
         avatar.setRainCallback(() -> createRain(finalCloud));
 
         EnergyDisplay energyDisplay = new EnergyDisplay(
@@ -107,41 +111,59 @@ public class PepseGameManager extends GameManager {
         gameObjects().addGameObject(avatar);
     }
 
+    private void addDelayedMovement(GameObject block, float delay) {
+        new ScheduledTask(
+                block,
+                delay,
+                false,
+                () -> rainMovement(block)
+        );
+    }
 
-    private void createRain(ArrayList<GameObject> finalCloud) {
-        for (GameObject cloudBlock : finalCloud) {
-            GameObject rainDrop = new GameObject(
-                    cloudBlock.getCenter(),
-                    new Vector2(RAIN_DROP_SIZE, RAIN_DROP_SIZE),
-                    new RectangleRenderable(RAIN_DROP_COLOR)
-            );
+    private void rainMovement(GameObject rainDrop){
+        // Transition for transparency and removal
+        new Transition<>(
+                rainDrop,
+                alpha -> {
+                    if (alpha <= 0) {
+                        gameObjects().removeGameObject(rainDrop);
+                    } else {
+                        rainDrop.renderer().setRenderable(
+                                new OvalRenderable(
+                                        new Color(RAIN_DROP_COLOR.getRed(), RAIN_DROP_COLOR.getGreen(),
+                                                RAIN_DROP_COLOR.getBlue(), (int) (alpha * 255))
+                                )
+                        );
+                    }
+                },
+                1f, // Starting alpha
+                0f, // Ending alpha
+                Transition.LINEAR_INTERPOLATOR_FLOAT,
+                10f, // Duration of fade-out
+                Transition.TransitionType.TRANSITION_ONCE,
+                null
+        );
+    }
 
-            rainDrop.transform().setAccelerationY(GRAVITY);
+    private void createRain(ArrayList<ArrayList<GameObject>> finalCloud) {
+        float delay = PepseGameManager.RANDOM.nextFloat();
+        for (ArrayList<GameObject> arr : finalCloud) {
+            for ( GameObject obj : arr) {
+                GameObject rainDrop = new GameObject(
+                        obj.getTopLeftCorner(),
+                        new Vector2(RAIN_DROP_SIZE, RAIN_DROP_SIZE),
+                        new OvalRenderable(RAIN_DROP_COLOR)
+                );
 
-            // Transition for transparency and removal
-            new Transition<>(
-                    rainDrop,
-                    alpha -> {
-                        if (alpha <= 0) {
-                            gameObjects().removeGameObject(rainDrop);
-                        } else {
-                            rainDrop.renderer().setRenderable(
-                                    new RectangleRenderable(
-                                            new Color(RAIN_DROP_COLOR.getRed(), RAIN_DROP_COLOR.getGreen(),
-                                                    RAIN_DROP_COLOR.getBlue(), (int) (alpha * 255))
-                                    )
-                            );
-                        }
-                    },
-                    1f, // Starting alpha
-                    0f, // Ending alpha
-                    Transition.LINEAR_INTERPOLATOR_FLOAT,
-                    3f, // Duration of fade-out
-                    Transition.TransitionType.TRANSITION_ONCE,
-                    null
-            );
 
-            gameObjects().addGameObject(rainDrop, Layer.UI); // Use a layer guaranteed to be visible
+                addDelayedMovement(rainDrop, delay);
+                delay = PepseGameManager.RANDOM.nextFloat();
+
+                rainDrop.transform().setAccelerationY(GRAVITY);
+
+                gameObjects().addGameObject(rainDrop, Layer.UI); // Use a layer guaranteed to be visible
+            }
+
         }
     }
 

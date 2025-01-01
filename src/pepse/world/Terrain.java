@@ -20,6 +20,7 @@ public class Terrain {
     public Terrain(Vector2 windowDimensions, int seed) {
 
         this.groundHeightAtX0 = windowDimensions.y() * SHRINK_HEIGHT;
+        System.out.println(groundHeightAtX0);
         this.noiseGenerator = new NoiseGenerator(seed, (int) Math.floor(groundHeightAtX0));
 
     }

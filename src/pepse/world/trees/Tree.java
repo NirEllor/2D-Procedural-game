@@ -20,6 +20,7 @@ public class Tree {
     public static final Color LEAF_COLOR = new Color(50, 200, 30);
     private static final int TRUNK_WIDTH = 10;  // רוחב הגזע
     public static final int LEAF_SIZE = 20;  // גודל העלים
+    public static final String TREE_TRUNK = "TreeTrunk";
 
 
     public static void create(ArrayList<TreeInfo> trees, Terrain terrain, int x, Random rand) {
@@ -28,7 +29,7 @@ public class Tree {
 
         RectangleRenderable trunkRenderer = new RectangleRenderable(TRUNK_COLOR);
         GameObject trunk = new GameObject(treePosition, new Vector2(30, 100), trunkRenderer);
-        trunk.setTag("TreeTrunk");
+        trunk.setTag(TREE_TRUNK);
 
         ArrayList<GameObject> leaves = Leaves.create(treePosition, rand);
         int fruitAmount = rand.nextInt(12);
