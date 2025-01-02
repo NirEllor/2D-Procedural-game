@@ -3,7 +3,6 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
-import danogl.components.CoordinateSpace;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.ImageReader;
@@ -23,7 +22,6 @@ import pepse.world.trees.Flora;
 import pepse.world.trees.TreeInfo;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,29 +36,19 @@ public class PepseGameManager extends GameManager {
     private static final float RAIN_DROP_TRANSPARENCY_DECREMENT = 0.02f;
     private static final int RAIN_DROP_SIZE = 10;
     private static final Color RAIN_DROP_COLOR = new Color(173, 216, 230);
-    private float space;
-    private UserInputListener userInputListener;
-    private WindowController windowController;
-    private Terrain terrain;
-    private float currentCameraCenterX;
-    private float currentMinX;
-    private float currentMaxX;
-    private Flora flora;
-    private Vector2 windowDimensions;
+
+
 
 
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
                                WindowController windowController) {
-        this.userInputListener = inputListener;
-        this.windowController = windowController;
 
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        windowController.setTargetFramerate(500);
+        windowController.setTargetFramerate(50);
 
-        this.windowDimensions = windowController.getWindowDimensions();
-
-        terrain = new Terrain(windowDimensions, 42);
+        Vector2 windowDimensions = windowController.getWindowDimensions();
+        Terrain terrain = new Terrain(windowDimensions, 42);
 
         gameObjects().addGameObject(Sky.create(windowDimensions), Layer.BACKGROUND);
 
@@ -78,15 +66,15 @@ public class PepseGameManager extends GameManager {
             gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
         }
 
-        flora = new Flora(terrain, windowDimensions);
+        Flora flora = new Flora(terrain);
         ArrayList<TreeInfo> trees = flora.createInRange(0, (int) windowDimensions.x());
 
         //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
         // the leaves should NOT collide with the player
         for (TreeInfo tree : trees) {
-            gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
+            gameObjects().addGameObject(tree.getTree());
             for (GameObject leaf : tree.getLeaves()) {
-                gameObjects().addGameObject(leaf, Layer.BACKGROUND);
+                gameObjects().addGameObject(leaf, Layer.STATIC_OBJECTS);
 
             }
             for (GameObject fruit : tree.getFruits()) {
@@ -102,7 +90,6 @@ public class PepseGameManager extends GameManager {
             allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
-                obj.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
             }
         }
         // create Avatar
@@ -111,30 +98,24 @@ public class PepseGameManager extends GameManager {
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
         avatar.setCloud(allClouds);
-        avatar.setRainCallback(() -> createRain(allClouds));
+        ArrayList<ArrayList<GameObject>> finalCloud = allClouds;
+        avatar.setRainCallback(() -> createRain(finalCloud));
 
         EnergyDisplay energyDisplay = new EnergyDisplay(
                 new Vector2(windowDimensions.x() * 0.5F, 250),
                 new Vector2(100, 30)
         );
-        gameObjects().addGameObject(energyDisplay);
+        gameObjects().addGameObject(energyDisplay, Layer.UI);
         avatar.setEnergyUpdateCallback(energyDisplay::run);
 
 
         gameObjects().addGameObject(avatar);
-
-        this.currentCameraCenterX = avatar.getCenter().x();
-        this.currentMinX = 0;
-        this.currentMaxX = windowDimensions.x();
-
 
 //        float x =  windowController.getWindowDimensions().x() * 0.5f - initialAvatarLocation.x() * 0.5f;
 //        float y = windowController.getWindowDimensions().y() * 0.5f - initialAvatarLocation.y() * 0.5f;
         setCamera(new Camera(avatar, Vector2.ZERO,
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
-        
-
     }
 
     private void addDelayedMovement(GameObject block, float delay) {
@@ -193,67 +174,6 @@ public class PepseGameManager extends GameManager {
         }
     }
 
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-
-        if (userInputListener.isKeyPressed(KeyEvent.VK_ESCAPE)) windowController.closeWindow();
-
-        if (this.getCamera().getCenter().x() != currentCameraCenterX) {
-
-            space = (currentCameraCenterX - this.getCamera().getCenter().x()); //checking how much the camera moved
-            if (space != 0) {
-                if (space < 0) { //means avatar went right
-                    List<Block> blocks = terrain.createInRange((int) currentMaxX, (int) (currentMaxX - space));
-                    for (Block b : blocks) {
-                        gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
-                    }
-
-                    //if (RANDOM.nextInt(17) % 9 == 0)
-                        //flora.createInRange((int) currentMaxX, (int) (currentMaxX - space));
-                    makeTrees((int) currentMaxX, (int) (currentMaxX - space));
-                    
-                    currentMaxX += Block.SIZE;
-                }
-                else { //means avatar went left
-                    List<Block> blocks = terrain.createInRange((int)(currentMinX - space), (int)currentMinX);
-                    for (Block b : blocks) {
-                        gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
-                    }
-
-                    flora.createInRange((int)(currentMinX - space), (int)currentMinX);
-                    makeTrees((int)(currentMinX - space), (int)currentMinX);
-
-                    currentMinX -= Block.SIZE;
-                }
-                for(GameObject gameObject: gameObjects()){ //deleting unnecessary game objects
-                    if(gameObject.getCenter().x() > currentMaxX | gameObject.getCenter().x() < currentMinX) {
-                        gameObjects().removeGameObject(gameObject);
-                    }
-                }
-                space = 0;
-            }
-            currentCameraCenterX = this.getCamera().getCenter().x();
-        }
-    }
-
-    private void makeTrees(int min, int max) {
-
-        ArrayList<TreeInfo> trees = flora.createInRange(min, max);
-
-        //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
-        // the leaves should NOT collide with the player
-        for (TreeInfo tree : trees) {
-            gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
-            for (GameObject leaf : tree.getLeaves()) {
-                gameObjects().addGameObject(leaf, Layer.BACKGROUND);
-
-            }
-            for (GameObject fruit : tree.getFruits()) {
-                gameObjects().addGameObject(fruit, Layer.STATIC_OBJECTS);
-            }
-        }
-    }
 
     public void run() {
         super.run();

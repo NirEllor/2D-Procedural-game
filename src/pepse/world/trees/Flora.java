@@ -24,7 +24,7 @@ public class Flora {
     public static ArrayList<TreeInfo> plantTrees(Terrain terrain, int minX, int maxX, Vector2 windowDimensions) {
         ArrayList<TreeInfo> trees = new ArrayList<>();
         for (int x = minX; x < maxX; x++) {
-            if (Math.random() < 0.02) {  // 10% chance to plant a tree
+            if (Math.random() < 0.01) {  // 10% chance to plant a tree
                 if(Math.abs(x - (windowDimensions.x() / 2)) < 100) {
                     continue;
                 }
