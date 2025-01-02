@@ -25,8 +25,8 @@ public class Terrain {
     }
 
     public float groundHeightAt(float x) {
-       float noise = (float) noiseGenerator.noise(x, Block.SIZE * 7);
-       return groundHeightAtX0 + noise;
+        float noise = (float) noiseGenerator.noise(x, Block.SIZE * 7);
+        return groundHeightAtX0 + noise;
     }
 
     public List<Block> createInRange(int minX, int maxX) {
@@ -34,7 +34,7 @@ public class Terrain {
         int minXFloor = (int) Math.floor((float) minX / Block.SIZE);
         int maxXCeil = (int) Math.ceil((float) maxX / Block.SIZE);
         for (int x = minXFloor; x <= maxXCeil; x++) {
-            int xValue = x * Block.SIZE;
+            int xValue = x * Block.SIZE + minXFloor;
             int yValue = (int) (Math.floor(groundHeightAt(xValue) / Block.SIZE) * Block.SIZE);
             for (int y = yValue; y < yValue + TERRAIN_DEPTH; y++) {
                 RectangleRenderable blockRenderable =

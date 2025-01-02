@@ -1,6 +1,7 @@
 package pepse.world;
 
 import danogl.GameObject;
+import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
@@ -19,7 +20,10 @@ public class EnergyDisplay extends GameObject {
      *                      the GameObject will not be rendered.
      */
     public EnergyDisplay(Vector2 topLeftCorner, Vector2 dimensions) {
+
         super(topLeftCorner, dimensions, null);
+        this.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+
     }
 
     private void updateEnergy(float currentEnergy) {
@@ -27,7 +31,7 @@ public class EnergyDisplay extends GameObject {
         textRenderable.setColor(Color.YELLOW);
         renderer().setRenderable(textRenderable);
 
-        // Add the numeric lives counter to the game objects collection
+
     }
     public void run(float currentEnergy) {
         updateEnergy(currentEnergy);
