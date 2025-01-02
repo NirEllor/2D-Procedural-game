@@ -26,18 +26,10 @@ public class Tree {
 
     public static void create(ArrayList<TreeInfo> trees, Terrain terrain, int x, Random rand) {
         float groundHeight = terrain.groundHeightAt(x);
-        Vector2 treePosition = new Vector2(x, groundHeight - 100);
+        Vector2 treePosition = new Vector2(x, groundHeight - 70);
 
         RectangleRenderable trunkRenderer = new RectangleRenderable(TRUNK_COLOR);
-        GameObject trunk = new GameObject(treePosition, new Vector2(30, 100), trunkRenderer) {
-            @Override
-            public boolean shouldCollideWith(GameObject other) {
-                if (other.getTag().equals(Avatar.AVATAR)) {
-                    return true;
-                }
-                return super.shouldCollideWith(other);
-            }
-        };
+        GameObject trunk = new TreeTrunk(treePosition, trunkRenderer);
         trunk.setTag(TREE_TRUNK);
 
         ArrayList<GameObject> leaves = Leaves.create(treePosition, rand);

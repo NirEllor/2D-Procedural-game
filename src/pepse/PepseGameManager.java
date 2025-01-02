@@ -3,6 +3,7 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
 import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.ImageReader;
@@ -45,7 +46,7 @@ public class PepseGameManager extends GameManager {
                                WindowController windowController) {
 
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        windowController.setTargetFramerate(50);
+        windowController.setTargetFramerate(500);
 
         Vector2 windowDimensions = windowController.getWindowDimensions();
         Terrain terrain = new Terrain(windowDimensions, 42);
@@ -66,15 +67,15 @@ public class PepseGameManager extends GameManager {
             gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
         }
 
-        Flora flora = new Flora(terrain);
+        Flora flora = new Flora(terrain, windowDimensions);
         ArrayList<TreeInfo> trees = flora.createInRange(0, (int) windowDimensions.x());
 
         //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
         // the leaves should NOT collide with the player
         for (TreeInfo tree : trees) {
-            gameObjects().addGameObject(tree.getTree());
+            gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
             for (GameObject leaf : tree.getLeaves()) {
-                gameObjects().addGameObject(leaf, Layer.STATIC_OBJECTS);
+                gameObjects().addGameObject(leaf, Layer.BACKGROUND);
 
             }
             for (GameObject fruit : tree.getFruits()) {
@@ -90,6 +91,7 @@ public class PepseGameManager extends GameManager {
             allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
+                obj.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
             }
         }
         // create Avatar
@@ -98,8 +100,7 @@ public class PepseGameManager extends GameManager {
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
         avatar.setCloud(allClouds);
-        ArrayList<ArrayList<GameObject>> finalCloud = allClouds;
-        avatar.setRainCallback(() -> createRain(finalCloud));
+        avatar.setRainCallback(() -> createRain(allClouds));
 
         EnergyDisplay energyDisplay = new EnergyDisplay(
                 new Vector2(windowDimensions.x() * 0.5F, 250),
@@ -116,6 +117,7 @@ public class PepseGameManager extends GameManager {
         setCamera(new Camera(avatar, Vector2.ZERO,
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
+
     }
 
     private void addDelayedMovement(GameObject block, float delay) {
@@ -178,6 +180,7 @@ public class PepseGameManager extends GameManager {
     public void run() {
         super.run();
     }
+
 
     public static void main(String[] args) {
         new PepseGameManager().run();

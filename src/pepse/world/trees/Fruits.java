@@ -27,6 +27,7 @@ public class Fruits {
             int minus = rand.nextBoolean() ? 1 : -1;
             xOffset *= minus;
             int yOffset = rand.nextInt(90);
+            yOffset = Math.max(50, yOffset);
 //            minus = rand.nextBoolean() ? 1 : -1/9;
 //            yOffset *= minus;
 //            Random rand = new Random();

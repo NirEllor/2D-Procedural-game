@@ -18,16 +18,16 @@ public class Leaves {
     public static ArrayList<GameObject> create(Vector2 position, Random rand) {
         ArrayList<GameObject> leaves = new ArrayList<>();
 
-        int leafCount = rand.nextInt(100);
+        int leafCount = rand.nextInt(80);
         leafCount = Math.max(leafCount, 30);
         for (int i = 0; i < leafCount; i++) {
 
             int xOffset = rand.nextInt( 70);
             int minus = rand.nextBoolean() ? 1 : -1;
             xOffset *= minus;
-            int yOffset = rand.nextInt(100);
+            int yOffset = rand.nextInt(100) + 20;
             minus = rand.nextBoolean() ? 1 : -1/3;
-            yOffset *= minus;
+            //yOffset *= minus;
 
             GameObject leaf = new GameObject(new Vector2((position.x() + xOffset),
                     position.y() - yOffset),

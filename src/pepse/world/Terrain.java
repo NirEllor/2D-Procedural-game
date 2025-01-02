@@ -15,7 +15,7 @@ public class Terrain {
     private final float groundHeightAtX0;
     private final NoiseGenerator noiseGenerator;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
-    private static final int TERRAIN_DEPTH = 600;
+    private static final int TERRAIN_DEPTH = 20;
 
     public Terrain(Vector2 windowDimensions, int seed) {
 
