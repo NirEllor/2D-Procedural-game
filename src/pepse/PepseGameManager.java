@@ -75,7 +75,12 @@ public class PepseGameManager extends GameManager {
 
         List<Block> blocks = terrain.createInRange(0, (int) windowDimensions.x());
         for (Block b : blocks) {
-            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+            if (blocks.get(0).equals(b)) {
+                gameObjects().addGameObject(b, Layer.BACKGROUND);
+            }
+            else {
+                gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+            }
         }
 
         flora = new Flora(terrain, windowDimensions);
@@ -199,9 +204,9 @@ public class PepseGameManager extends GameManager {
 
         if (userInputListener.isKeyPressed(KeyEvent.VK_ESCAPE)) windowController.closeWindow();
 
-        if (this.getCamera().getCenter().x() != currentCameraCenterX) {
+        if (camera().getCenter().x() != currentCameraCenterX) {
 
-            space = (currentCameraCenterX - this.getCamera().getCenter().x()); //checking how much the camera moved
+            space = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
             if (space != 0) {
                 if (space < 0) { //means avatar went right
                     List<Block> blocks = terrain.createInRange((int) currentMaxX, (int) (currentMaxX - space));
@@ -233,7 +238,7 @@ public class PepseGameManager extends GameManager {
                 }
                 space = 0;
             }
-            currentCameraCenterX = this.getCamera().getCenter().x();
+            currentCameraCenterX = camera().getCenter().x();
         }
     }
 

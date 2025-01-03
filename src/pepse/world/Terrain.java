@@ -16,11 +16,13 @@ public class Terrain {
     private final NoiseGenerator noiseGenerator;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
+    private final Vector2 windowDimensions;
 
     public Terrain(Vector2 windowDimensions, int seed) {
 
         this.groundHeightAtX0 = windowDimensions.y() * SHRINK_HEIGHT;
         this.noiseGenerator = new NoiseGenerator(seed, (int) Math.floor(groundHeightAtX0));
+        this.windowDimensions = windowDimensions;
 
     }
 
@@ -34,12 +36,14 @@ public class Terrain {
         int minXFloor = (int) Math.floor((float) minX / Block.SIZE);
         int maxXCeil = (int) Math.ceil((float) maxX / Block.SIZE);
         for (int x = minXFloor; x <= maxXCeil; x++) {
-            int xValue = x * Block.SIZE + minXFloor;
-            int yValue = (int) (Math.floor(groundHeightAt(xValue) / Block.SIZE) * Block.SIZE);
+            int xValue = x * Block.SIZE;
+            int yValue = (int)
+                    Math.max(groundHeightAt(xValue), windowDimensions.y() - (TERRAIN_DEPTH * Block.SIZE));
+            yValue = (int) Math.floor((float) yValue / Block.SIZE);
             for (int y = yValue; y < yValue + TERRAIN_DEPTH; y++) {
                 RectangleRenderable blockRenderable =
                         new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
-                Block block = new Block(new Vector2(xValue, y), blockRenderable);
+                Block block = new Block(new Vector2(xValue, y * Block.SIZE), blockRenderable);
                 block.setTag(GROUND);
                 blocks.add(block);
             }

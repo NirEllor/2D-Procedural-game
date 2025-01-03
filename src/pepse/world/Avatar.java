@@ -96,29 +96,6 @@ public class Avatar  extends GameObject {
         if (other.getTag().equals(Fruits.FRUIT)) {
             increaseEnergy(JUMP_ENERGY_LOSS);
         }
-
-//        if (other.getTag().equals(Tree.TREE_TRUNK)) {
-//            Vector2 collisionNormal = collision.getNormal();
-//
-//            // Check if collision is from above
-//            if (collisionNormal.y() > 0) {
-//                // Stop downward motion
-//                this.transform().setVelocityY(0);
-//
-//                // Snap the avatar's position to the top of the tree trunk
-//                this.transform().setTopLeftCorner(
-//                        new Vector2(
-//                                this.transform().getTopLeftCorner().x(),
-//                                other.getTopLeftCorner().y() - this.getDimensions().y()
-//                        )
-//                );
-//
-//                // Treat the tree trunk as terrain
-//            } else {
-//                // Restrict movement into the tree trunk from the sides
-//                resolveSideCollision(collisionNormal);
-//            }
-//        }
     }
 
     @Override
@@ -128,28 +105,6 @@ public class Avatar  extends GameObject {
         if (other.getTag().equals(Terrain.GROUND)) {
             this.touchingTerrain = true;
         }
-
-//        if (other.getTag().equals(Tree.TREE_TRUNK)) {
-//            Vector2 collisionNormal = collision.getNormal();
-//
-//            // Ensure the avatar stays on top of the tree trunk
-//            if (collisionNormal.y() > 0) {
-//                this.transform().setVelocityY(0); // Stop any vertical motion
-//
-//                // Snap the avatar's position to remain on the top of the tree trunk
-//                this.transform().setTopLeftCorner(
-//                        new Vector2(
-//                                this.transform().getTopLeftCorner().x(),
-//                                other.getTopLeftCorner().y() - this.getDimensions().y()
-//                        )
-//                );
-//
-//                // Treat the tree trunk as terrain
-//            } else {
-//                // Restrict movement into the tree trunk from the sides
-//                resolveSideCollision(collisionNormal);
-//            }
-//        }
     }
 
     @Override
@@ -161,20 +116,6 @@ public class Avatar  extends GameObject {
         }
     }
 
-    /**
-     * Restricts the avatar's movement into the tree trunk during side collisions.
-     */
-    private void resolveSideCollision(Vector2 collisionNormal) {
-        Vector2 velocity = this.transform().getVelocity();
-        float dotProduct = velocity.dot(collisionNormal);
-
-        // If the avatar is moving into the tree trunk, neutralize the movement in that direction
-        if (dotProduct < 0) {
-            this.transform().setVelocity(
-                    velocity.subtract(collisionNormal.mult(dotProduct))
-            );
-        }
-    }
 
 
 
