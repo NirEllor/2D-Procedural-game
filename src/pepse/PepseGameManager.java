@@ -12,7 +12,6 @@ import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.OvalRenderable;
-import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.world.*;
 import pepse.world.daynight.Cloud;
@@ -31,14 +30,10 @@ import java.util.Random;
 public class PepseGameManager extends GameManager {
     public static final Random RANDOM = new Random();
     private static final int AVATAR_TERRAIN_DIST = 100;
-    private static final float NUMERIC_LIFE_SIZE = 2000;
-    private static final float NUMERIC_LIFE_SPACE_X = 160;
-    private static final float NUMERIC_LIFE_SPACE_Y = 36;
     private static final float GRAVITY = 600f;
     private static final float RAIN_DROP_TRANSPARENCY_DECREMENT = 0.02f;
     private static final int RAIN_DROP_SIZE = 10;
     private static final Color RAIN_DROP_COLOR = new Color(173, 216, 230);
-    private float space;
     private UserInputListener userInputListener;
     private WindowController windowController;
     private Terrain terrain;
@@ -46,7 +41,6 @@ public class PepseGameManager extends GameManager {
     private float currentMinX;
     private float currentMaxX;
     private Flora flora;
-    private Vector2 windowDimensions;
 
 
     @Override
@@ -58,7 +52,7 @@ public class PepseGameManager extends GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         windowController.setTargetFramerate(500);
 
-        this.windowDimensions = windowController.getWindowDimensions();
+        Vector2 windowDimensions = windowController.getWindowDimensions();
 
         terrain = new Terrain(windowDimensions, 42);
 
@@ -115,7 +109,7 @@ public class PepseGameManager extends GameManager {
         float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
-        avatar.setCloud(allClouds);
+//        avatar.setCloud(allClouds);
         avatar.setRainCallback(() -> createRain(allClouds));
 
         EnergyDisplay energyDisplay = new EnergyDisplay(
@@ -133,8 +127,6 @@ public class PepseGameManager extends GameManager {
         this.currentMaxX = windowDimensions.x();
 
 
-//        float x =  windowController.getWindowDimensions().x() * 0.5f - initialAvatarLocation.x() * 0.5f;
-//        float y = windowController.getWindowDimensions().y() * 0.5f - initialAvatarLocation.y() * 0.5f;
         setCamera(new Camera(avatar, Vector2.ZERO,
                 windowController.getWindowDimensions(),
                 windowController.getWindowDimensions()));
@@ -206,7 +198,7 @@ public class PepseGameManager extends GameManager {
 
         if (camera().getCenter().x() != currentCameraCenterX) {
 
-            space = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
+            float space = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
             if (space != 0) {
                 if (space < 0) { //means avatar went right
                     List<Block> blocks = terrain.createInRange((int) currentMaxX, (int) (currentMaxX - space));
@@ -223,7 +215,12 @@ public class PepseGameManager extends GameManager {
                 else { //means avatar went left
                     List<Block> blocks = terrain.createInRange((int)(currentMinX - space), (int)currentMinX);
                     for (Block b : blocks) {
-                        gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+                        if (blocks.get(0).equals(b) || blocks.get(blocks.size() - 1).equals(b)) {
+                            gameObjects().addGameObject(b, Layer.BACKGROUND);
+                        }
+                        else {
+                            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+                        }
                     }
 
                     flora.createInRange((int)(currentMinX - space), (int)currentMinX);
@@ -236,7 +233,6 @@ public class PepseGameManager extends GameManager {
                         gameObjects().removeGameObject(gameObject);
                     }
                 }
-                space = 0;
             }
             currentCameraCenterX = camera().getCenter().x();
         }

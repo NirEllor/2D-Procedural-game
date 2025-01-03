@@ -9,7 +9,6 @@ import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.trees.Fruits;
-import pepse.world.trees.Tree;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -47,7 +46,6 @@ public class Avatar  extends GameObject {
     private final UserInputListener inputListener;
     private final ImageReader imageReader;
     private boolean touchingTerrain;
-    private ArrayList<ArrayList<GameObject>> clouds;
 
     private EnergyUpdateCallback energyUpdateCallback;
     private Runnable rainCallback;
@@ -238,7 +236,4 @@ public class Avatar  extends GameObject {
         return energy;
     }
 
-    public void setCloud(ArrayList<ArrayList<GameObject>> cloudBlocks) {
-        this.clouds = cloudBlocks;
-    }
 }
