@@ -12,6 +12,7 @@ public class Terrain {
 
     public static final float SHRINK_HEIGHT = (float) 2 / 3;
     public static final String GROUND = "ground";
+    public static final String SURFACE = "SURFACE";
     private final float groundHeightAtX0;
     private final NoiseGenerator noiseGenerator;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
@@ -44,6 +45,7 @@ public class Terrain {
                 RectangleRenderable blockRenderable =
                         new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
                 Block block = new Block(new Vector2(xValue, y * Block.SIZE), blockRenderable);
+//                if (y == (yValue) || y == (yValue + 1)) block.setTag(SURFACE);
                 block.setTag(GROUND);
                 blocks.add(block);
             }

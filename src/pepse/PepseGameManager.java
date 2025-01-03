@@ -41,11 +41,14 @@ public class PepseGameManager extends GameManager {
     private float currentMinX;
     private float currentMaxX;
     private Flora flora;
+    private Random rand;
 
 
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
                                WindowController windowController) {
+        int seed = new Random().nextInt();
+        rand = new Random(seed);
         this.userInputListener = inputListener;
         this.windowController = windowController;
 
@@ -54,7 +57,7 @@ public class PepseGameManager extends GameManager {
 
         Vector2 windowDimensions = windowController.getWindowDimensions();
 
-        terrain = new Terrain(windowDimensions, 42);
+        terrain = new Terrain(windowDimensions, seed);
 
         gameObjects().addGameObject(Sky.create(windowDimensions), Layer.BACKGROUND);
 
@@ -69,12 +72,12 @@ public class PepseGameManager extends GameManager {
 
         List<Block> blocks = terrain.createInRange(0, (int) windowDimensions.x());
         for (Block b : blocks) {
-            if (blocks.get(0).equals(b)) {
-                gameObjects().addGameObject(b, Layer.BACKGROUND);
-            }
-            else {
+//            if (b.getTag().equals(Terrain.SURFACE)) {
+//                gameObjects().addGameObject(b, Layer.BACKGROUND);
+//            }
+//            else {
                 gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
-            }
+//            }
         }
 
         flora = new Flora(terrain, windowDimensions);
@@ -203,8 +206,14 @@ public class PepseGameManager extends GameManager {
                 if (space < 0) { //means avatar went right
                     List<Block> blocks = terrain.createInRange((int) currentMaxX, (int) (currentMaxX - space));
                     for (Block b : blocks) {
-                        gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+                        if (b.getTag().equals(Terrain.SURFACE)) {
+                            gameObjects().addGameObject(b, Layer.BACKGROUND);
+                        }
+                        else {
+                            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+                        }
                     }
+
 
                     //if (RANDOM.nextInt(17) % 9 == 0)
                     //flora.createInRange((int) currentMaxX, (int) (currentMaxX - space));
@@ -247,11 +256,7 @@ public class PepseGameManager extends GameManager {
         for (TreeInfo tree : trees) {
             gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
             for (GameObject leaf : tree.getLeaves()) {
-                gameObjects().addGameObject(leaf, Layer.BACKGROUND);
-
-            }
-            for (GameObject fruit : tree.getFruits()) {
-                gameObjects().addGameObject(fruit, Layer.STATIC_OBJECTS);
+                gameObjects().addGameObject(leaf, Layer.STATIC_OBJECTS);
             }
         }
     }
