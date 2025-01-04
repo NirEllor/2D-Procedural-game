@@ -28,10 +28,9 @@ import java.util.List;
 import java.util.Random;
 
 public class PepseGameManager extends GameManager {
-    public static final Random RANDOM = new Random();
+
     private static final int AVATAR_TERRAIN_DIST = 100;
     private static final float GRAVITY = 600f;
-    private static final float RAIN_DROP_TRANSPARENCY_DECREMENT = 0.02f;
     private static final int RAIN_DROP_SIZE = 10;
     private static final Color RAIN_DROP_COLOR = new Color(173, 216, 230);
     private UserInputListener userInputListener;
@@ -80,7 +79,7 @@ public class PepseGameManager extends GameManager {
 //            }
         }
 
-        flora = new Flora(terrain, windowDimensions);
+        flora = new Flora(terrain, windowDimensions, rand);
         ArrayList<TreeInfo> trees = flora.createInRange(0, (int) windowDimensions.x());
 
         //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
@@ -97,10 +96,10 @@ public class PepseGameManager extends GameManager {
         }
 
         ArrayList<ArrayList<GameObject>> allClouds = new ArrayList<>();
-        ArrayList<GameObject> cloud = null;
+        ArrayList<GameObject> cloud;
         for (int i = 0; i < 6; i++) {
             cloud = Cloud.createCloud(
-                    new Vector2(-200 * (i), 100 * (i % 3 + 1)));
+                    new Vector2(-200 * (i), 100 * (i % 3 + 1)), rand);
             allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
@@ -172,7 +171,7 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createRain(ArrayList<ArrayList<GameObject>> finalCloud) {
-        float delay = PepseGameManager.RANDOM.nextFloat();
+        float delay = rand.nextFloat();
         for (ArrayList<GameObject> arr : finalCloud) {
             for ( GameObject obj : arr) {
                 GameObject rainDrop = new GameObject(
@@ -183,7 +182,7 @@ public class PepseGameManager extends GameManager {
 
 
                 addDelayedMovement(rainDrop, delay);
-                delay = PepseGameManager.RANDOM.nextFloat();
+                delay = rand.nextFloat();
 
                 rainDrop.transform().setAccelerationY(GRAVITY);
 
@@ -215,8 +214,6 @@ public class PepseGameManager extends GameManager {
                     }
 
 
-                    //if (RANDOM.nextInt(17) % 9 == 0)
-                    //flora.createInRange((int) currentMaxX, (int) (currentMaxX - space));
                     makeTrees((int) currentMaxX, (int) (currentMaxX - space));
 
                     currentMaxX += Block.SIZE;
@@ -257,6 +254,9 @@ public class PepseGameManager extends GameManager {
             gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
             for (GameObject leaf : tree.getLeaves()) {
                 gameObjects().addGameObject(leaf, Layer.STATIC_OBJECTS);
+            }
+            for (GameObject fruit : tree.getFruits()) {
+                gameObjects().addGameObject(fruit, Layer.STATIC_OBJECTS);
             }
         }
     }
