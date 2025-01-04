@@ -5,6 +5,7 @@ import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.PepseGameManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -25,8 +26,8 @@ public class Leaves {
             int minus = rand.nextBoolean() ? 1 : -1;
             xOffset *= minus;
             int yOffset = rand.nextInt(100) + 20;
-//            minus = rand.nextBoolean() ? 1 : -1/3;
-//            yOffset *= minus;
+            minus = rand.nextBoolean() ? 1 : -1/3;
+            //yOffset *= minus;
 
             GameObject leaf = new GameObject(new Vector2((position.x() + xOffset),
                     position.y() - yOffset),

@@ -1,9 +1,14 @@
 package pepse.world.trees;
 
 import danogl.GameObject;
+import danogl.components.ScheduledTask;
+import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.PepseGameManager;
+import pepse.world.Avatar;
 import pepse.world.Terrain;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;

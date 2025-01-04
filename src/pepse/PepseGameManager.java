@@ -79,7 +79,7 @@ public class PepseGameManager extends GameManager {
 //            }
         }
 
-        flora = new Flora(terrain, windowDimensions, rand);
+        flora = new Flora(terrain, windowDimensions);
         ArrayList<TreeInfo> trees = flora.createInRange(0, (int) windowDimensions.x());
 
         //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,

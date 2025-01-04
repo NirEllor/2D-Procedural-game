@@ -4,10 +4,12 @@ import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.components.ScheduledTask;
 import danogl.util.Vector2;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import danogl.gui.rendering.OvalRenderable;
+import pepse.PepseGameManager;
 import pepse.world.Avatar;
 
 public class Fruits {
@@ -26,8 +28,8 @@ public class Fruits {
             xOffset *= minus;
             int yOffset = rand.nextInt(90);
             yOffset = Math.max(50, yOffset);
-            minus = rand.nextBoolean() ? 1 : -1/9;
-            yOffset *= minus;
+//            minus = rand.nextBoolean() ? 1 : -1/9;
+//            yOffset *= minus;
 //            Random rand = new Random();
 //            int xOffset = PepseGameManager.RANDOM.nextInt(-60, 60);
 //            int yOffset = PepseGameManager.RANDOM.nextInt(-10, 90);
