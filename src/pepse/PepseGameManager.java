@@ -42,6 +42,8 @@ public class PepseGameManager extends GameManager {
     private Flora flora;
     private Random rand;
     private int seed;
+    private Avatar avatar;
+    private ArrayList<ArrayList<GameObject>> allClouds;
 
 
     @Override
@@ -96,7 +98,7 @@ public class PepseGameManager extends GameManager {
             }
         }
 
-        ArrayList<ArrayList<GameObject>> allClouds = new ArrayList<>();
+        allClouds = new ArrayList<>();
         ArrayList<GameObject> cloud;
         for (int i = 0; i < 6; i++) {
             cloud = Cloud.createCloud(
@@ -111,7 +113,7 @@ public class PepseGameManager extends GameManager {
         float xInitialAvatarLocation = windowDimensions.mult(0.5f).x();
         float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
-        Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
+        avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
 //        avatar.setCloud(allClouds);
         avatar.setRainCallback(() -> createRain(allClouds));
 
@@ -182,11 +184,12 @@ public class PepseGameManager extends GameManager {
                         new OvalRenderable(RAIN_DROP_COLOR)
                 );
 
-
                 addDelayedMovement(rainDrop, delay);
                 delay = rainRand.nextFloat();
 
                 rainDrop.transform().setAccelerationY(GRAVITY);
+
+                rainDrop.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
                 gameObjects().addGameObject(rainDrop, Layer.UI); // Use a layer guaranteed to be visible
             }
@@ -201,6 +204,7 @@ public class PepseGameManager extends GameManager {
         if (userInputListener.isKeyPressed(KeyEvent.VK_ESCAPE)) windowController.closeWindow();
 
         if (camera().getCenter().x() != currentCameraCenterX) {
+            
 
             float space = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
             if (space != 0) {
