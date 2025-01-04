@@ -6,10 +6,10 @@ import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
-import pepse.PepseGameManager;
 import pepse.util.ColorSupplier;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Cloud {
@@ -26,10 +26,10 @@ public class Cloud {
             {0, 0, 0, 0, 0, 0}};
 
     // Method to create the cloud
-    public static ArrayList<GameObject> createCloud(Vector2 position) {
+    public static ArrayList<GameObject> createCloud(Vector2 position, Random rand) {
         ArrayList<GameObject> cloudBlocks = new ArrayList<>();
 
-        float delay = PepseGameManager.RANDOM.nextFloat();
+        float delay = rand.nextFloat();
         // Iterate over the cloud shape array
         for (int row = 0; row < cloudShape.length; row++) {
             for (int col = 0; col < cloudShape[row].length; col++) {
@@ -53,7 +53,7 @@ public class Cloud {
     }
 
     private static void cloudMovement(GameObject block) {
-        new Transition<Float>(
+        new Transition<>(
                 block,  // The object to apply the transition to (the block)
                 (Float t) -> {
                     // This lambda defines how the transition will update the block's position
