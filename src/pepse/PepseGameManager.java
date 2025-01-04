@@ -41,12 +41,13 @@ public class PepseGameManager extends GameManager {
     private float currentMaxX;
     private Flora flora;
     private Random rand;
+    private int seed;
 
 
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
                                WindowController windowController) {
-        int seed = new Random().nextInt();
+        seed = new Random().nextInt();
         rand = new Random(seed);
         this.userInputListener = inputListener;
         this.windowController = windowController;
@@ -99,7 +100,7 @@ public class PepseGameManager extends GameManager {
         ArrayList<GameObject> cloud;
         for (int i = 0; i < 6; i++) {
             cloud = Cloud.createCloud(
-                    new Vector2(-200 * (i), 100 * (i % 3 + 1)), rand);
+                    new Vector2(-200 * (i), 100 * (i % 3 + 1)), seed);
             allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
@@ -171,7 +172,8 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createRain(ArrayList<ArrayList<GameObject>> finalCloud) {
-        float delay = rand.nextFloat();
+        Random rainRand = new Random(seed);
+        float delay = rainRand.nextFloat();
         for (ArrayList<GameObject> arr : finalCloud) {
             for ( GameObject obj : arr) {
                 GameObject rainDrop = new GameObject(
@@ -182,7 +184,7 @@ public class PepseGameManager extends GameManager {
 
 
                 addDelayedMovement(rainDrop, delay);
-                delay = rand.nextFloat();
+                delay = rainRand.nextFloat();
 
                 rainDrop.transform().setAccelerationY(GRAVITY);
 

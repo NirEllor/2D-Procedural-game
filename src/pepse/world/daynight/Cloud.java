@@ -26,10 +26,11 @@ public class Cloud {
             {0, 0, 0, 0, 0, 0}};
 
     // Method to create the cloud
-    public static ArrayList<GameObject> createCloud(Vector2 position, Random rand) {
+    public static ArrayList<GameObject> createCloud(Vector2 position, int seed) {
         ArrayList<GameObject> cloudBlocks = new ArrayList<>();
 
-        float delay = rand.nextFloat();
+        Random randCloud = new Random(seed);
+        float delay = randCloud.nextFloat();
         // Iterate over the cloud shape array
         for (int row = 0; row < cloudShape.length; row++) {
             for (int col = 0; col < cloudShape[row].length; col++) {
