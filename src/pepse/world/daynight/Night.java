@@ -11,8 +11,8 @@ import java.awt.*;
 
 public class Night {
 
-    private static final float INITIAL_OPACITY = 0f; // התחלה
-    private static final float MIDNIGHT_OPACITY = 0.5f; // סיום
+    private static final float INITIAL_OPACITY = 0f;
+    private static final float MIDNIGHT_OPACITY = 0.5f;
     public static final String NIGHT = "Night";
     public static final Color NIGHT_COLOR = new Color(0, 0, 0, 1f);
 

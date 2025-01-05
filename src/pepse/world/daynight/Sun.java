@@ -31,7 +31,7 @@ public class Sun {
         Vector2 cycleCenter = new Vector2(windowDimensions.x() * HALF, y);  // The ground center
 
 
-        new Transition<Float>(sun, (Float angle) -> sun.setCenter(initialSunCenter.subtract(cycleCenter).
+        new Transition<>(sun, (Float angle) -> sun.setCenter(initialSunCenter.subtract(cycleCenter).
                 rotated(angle).add(cycleCenter)), INITIAL_VALUE, FINAL_VALUE,
                 Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength,
                 Transition.TransitionType.TRANSITION_LOOP, null);
