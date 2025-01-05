@@ -15,12 +15,13 @@ import java.util.Random;
 public class Cloud {
 
     private static final Color BASE_CLOUD_COLOR = new Color(255, 255, 255);
-    private static final int BLOCK_SIZE = 30; // גודל כל בלוק בענן
+    private static final int BLOCK_SIZE = 20; // גודל כל בלוק בענן
     private static final float CLOUD_SPEED = 50f; // מהירות הענן (פיקסלים בשנייה)
-    public static final int MOVE_FACTOR = 1;
+    public static final int MOVE_FACTOR = 2;
     public static final float INITIAL_VALUE = 0f;
     public static final float END_VALUE = 1f;
-    public static final float TRANSITION_TIME = 4f;
+    public static final float TRANSITION_TIME = 3f;
+    public static final String CLOUD = "cloud";
     static int[][] cloudShape = new int[][]{
             {0, 1, 1, 0, 0, 0},
             {1, 1, 1, 0, 1, 0},
@@ -40,14 +41,18 @@ public class Cloud {
             for (int col = 0; col < cloudShape[row].length; col++) {
                 if (cloudShape[row][col] == 1) {  // If there's a block at this position
                     // Create a block at the appropriate position
-                    Vector2 blockPosition = new Vector2(position.x() + col * 20, position.y() - row * 20);
+                    Vector2 blockPosition = new Vector2(position.x() + col * BLOCK_SIZE,
+                            position.y() - row * BLOCK_SIZE);
 
-                    GameObject block = new GameObject(blockPosition, new Vector2(20, 20),
+                    GameObject block = new GameObject(blockPosition, new Vector2(BLOCK_SIZE, BLOCK_SIZE),
                             new RectangleRenderable(ColorSupplier.approximateMonoColor(BASE_CLOUD_COLOR)));
 
                     addDelayedMovement(block, delay);
 
                     block.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+
+                    block.setTag(CLOUD);
+
 
                     cloudBlocks.add(block);  // Add the block to the cloud
                 }

@@ -61,14 +61,13 @@ public class PepseGameManager extends GameManager {
         this.windowDimensions = windowController.getWindowDimensions();
 
         createDayNight();
+        createClouds();
 
         terrain = new Terrain(windowDimensions, seed);
         makeBlocks(0, (int) windowDimensions.x());
 
         flora = new Flora(terrain, windowDimensions, seed);
         makeTrees(0, (int) windowDimensions.x());
-
-        createClouds();
 
         createAvatar(inputListener, imageReader);
 
@@ -246,11 +245,15 @@ public class PepseGameManager extends GameManager {
     }
 
     private void removeObjects() {
-        for(GameObject gameObject: gameObjects()){ //deleting unnecessary game objects
-            if(gameObject.getCenter().x() > currentMaxX | gameObject.getCenter().x() < currentMinX |
+        for(GameObject gameObject: gameObjects()) { //deleting unnecessary game objects
+            if (gameObject.getCenter().x() > currentMaxX | gameObject.getCenter().x() < currentMinX |
                     gameObject.getCenter().y() > this.windowController.getWindowDimensions().y() |
                     (gameObject.getCenter().y() < 0 && !gameObject.getTag().equals(Fruit.FRUIT))) {
-                gameObjects().removeGameObject(gameObject);
+                if (gameObject.getTag().equals("cloud") && gameObject.getCenter().x() > currentMaxX) {
+                        gameObject.setCenter(new Vector2(currentMinX + 10, gameObject.getCenter().y()));
+                } else {
+                    gameObjects().removeGameObject(gameObject);
+                }
             }
         }
     }
