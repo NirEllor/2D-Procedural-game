@@ -156,28 +156,28 @@ public class Avatar  extends GameObject {
         super.update(deltaTime);
         float xVel = MIN_ENERGY;
 
-        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)  && !inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && energy >= RUN_ENERGY_LOSS) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)  && !inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && getEnergy() >= RUN_ENERGY_LOSS) {
             handleRunning(true);
             xVel -= VELOCITY_X;
-        } else if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)  && !inputListener.isKeyPressed(KeyEvent.VK_LEFT) && energy >= RUN_ENERGY_LOSS) {
+        } else if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)  && !inputListener.isKeyPressed(KeyEvent.VK_LEFT) && getEnergy() >= RUN_ENERGY_LOSS) {
             handleRunning(false);
             xVel += VELOCITY_X;
-        } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && energy >= 10) {
+        } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && getEnergy() >= 10) {
             handleJumping();
         } else {
             handleIdle();
         }
         transform().setVelocityX(xVel);
-        energyUpdateCallback.onEnergyUpdate((int) energy);
+        energyUpdateCallback.onEnergyUpdate((int) getEnergy());
     }
 
 
     private void decreaseEnergy(float amount) {
-        energy = Math.max(MIN_ENERGY, energy - amount);
+        setEnergy(Math.max(MIN_ENERGY, getEnergy() - amount));
     }
 
     private void increaseEnergy(float amount) {
-        energy = Math.min(MAX_ENERGY, energy + amount);
+        setEnergy(Math.min(MAX_ENERGY, getEnergy() + amount));
     }
 
     private void handleRunning(boolean isLeft) {
