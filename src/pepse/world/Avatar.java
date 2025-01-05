@@ -8,11 +8,10 @@ import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.world.trees.Fruits;
+import pepse.world.trees.Fruit;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 
 public class Avatar  extends GameObject {
@@ -87,11 +86,11 @@ public class Avatar  extends GameObject {
             this.transform().setVelocityY(0); // Stop any vertical motion
         }
 
-        if (other.getTag().equals(Terrain.GROUND)) {
+        if (other.getTag().equals(Block.BLOCK_TAG)) {
             this.touchingTerrain = true;
         }
 
-        if (other.getTag().equals(Fruits.FRUIT)) {
+        if (other.getTag().equals(Fruit.FRUIT)) {
             increaseEnergy(JUMP_ENERGY_LOSS);
         }
     }
@@ -100,7 +99,7 @@ public class Avatar  extends GameObject {
     public void onCollisionStay(GameObject other, Collision collision) {
         super.onCollisionStay(other, collision);
 
-        if (other.getTag().equals(Terrain.GROUND)) {
+        if (other.getTag().equals(Block.BLOCK_TAG)) {
             this.touchingTerrain = true;
         }
     }
@@ -109,7 +108,7 @@ public class Avatar  extends GameObject {
     public void onCollisionExit(GameObject other) {
         super.onCollisionExit(other);
 
-        if (other.getTag().equals(Terrain.GROUND)) {
+        if (other.getTag().equals(Block.BLOCK_TAG)) {
             this.touchingTerrain = false;
         }
     }
@@ -159,7 +158,7 @@ public class Avatar  extends GameObject {
         } else if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && !inputListener.isKeyPressed(KeyEvent.VK_LEFT) && energy >= RUN_ENERGY_LOSS) {
             handleRunning(false);
             xVel += VELOCITY_X;
-        } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && energy >= JUMP_ENERGY_LOSS && getVelocity().y() == MIN_ENERGY) {
+        } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && energy >= JUMP_ENERGY_LOSS && getVelocity().y() == MIN_ENERGY) {
             handleJumping();
         } else {
             handleIdle();

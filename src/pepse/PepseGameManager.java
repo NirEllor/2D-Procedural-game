@@ -19,6 +19,7 @@ import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Flora;
+import pepse.world.trees.Fruit;
 import pepse.world.trees.TreeInfo;
 
 import java.awt.Color;
@@ -55,7 +56,7 @@ public class PepseGameManager extends GameManager {
         this.windowController = windowController;
 
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        windowController.setTargetFramerate(500);
+        windowController.setTargetFramerate(20);
 
         Vector2 windowDimensions = windowController.getWindowDimensions();
 
@@ -82,21 +83,8 @@ public class PepseGameManager extends GameManager {
 //            }
         }
 
-        flora = new Flora(terrain, windowDimensions);
-        ArrayList<TreeInfo> trees = flora.createInRange(0, (int) windowDimensions.x());
-
-        //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
-        // the leaves should NOT collide with the player
-        for (TreeInfo tree : trees) {
-            gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
-            for (GameObject leaf : tree.getLeaves()) {
-                gameObjects().addGameObject(leaf, Layer.BACKGROUND);
-
-            }
-            for (GameObject fruit : tree.getFruits()) {
-                gameObjects().addGameObject(fruit, Layer.STATIC_OBJECTS);
-            }
-        }
+        flora = new Flora(terrain, windowDimensions, seed);
+        makeTrees(0, (int) windowDimensions.x());
 
         allClouds = new ArrayList<>();
         ArrayList<GameObject> cloud;
@@ -204,21 +192,21 @@ public class PepseGameManager extends GameManager {
         if (userInputListener.isKeyPressed(KeyEvent.VK_ESCAPE)) windowController.closeWindow();
 
         if (camera().getCenter().x() != currentCameraCenterX) {
-            
+
 
             float space = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
             if (space != 0) {
                 if (space < 0) { //means avatar went right
                     List<Block> blocks = terrain.createInRange((int) currentMaxX, (int) (currentMaxX - space));
                     for (Block b : blocks) {
-                        if (b.getTag().equals(Terrain.SURFACE)) {
-                            gameObjects().addGameObject(b, Layer.BACKGROUND);
-                        }
-                        else {
-                            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
-                        }
+//                        if (b.getTag().equals(Terrain.SURFACE)) {
+//                            gameObjects().addGameObject(b, Layer.BACKGROUND);
+//                        }
+//                        else {
+//                            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+//                        }
+                        gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
                     }
-
 
                     makeTrees((int) currentMaxX, (int) (currentMaxX - space));
 
@@ -227,26 +215,29 @@ public class PepseGameManager extends GameManager {
                 else { //means avatar went left
                     List<Block> blocks = terrain.createInRange((int)(currentMinX - space), (int)currentMinX);
                     for (Block b : blocks) {
-                        if (blocks.get(0).equals(b) || blocks.get(blocks.size() - 1).equals(b)) {
-                            gameObjects().addGameObject(b, Layer.BACKGROUND);
-                        }
-                        else {
-                            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
-                        }
+//                        if (blocks.get(0).equals(b) || blocks.get(blocks.size() - 1).equals(b)) {
+//                            gameObjects().addGameObject(b, Layer.BACKGROUND);
+//                        }
+//                        else {
+//                            gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
+//                        }
+                        gameObjects().addGameObject(b, Layer.STATIC_OBJECTS);
                     }
 
-                    flora.createInRange((int)(currentMinX - space), (int)currentMinX);
                     makeTrees((int)(currentMinX - space), (int)currentMinX);
 
                     currentMinX -= Block.SIZE;
                 }
-                for(GameObject gameObject: gameObjects()){ //deleting unnecessary game objects
-                    if(gameObject.getCenter().x() > currentMaxX | gameObject.getCenter().x() < currentMinX) {
-                        gameObjects().removeGameObject(gameObject);
-                    }
-                }
+
             }
             currentCameraCenterX = camera().getCenter().x();
+        }
+        for(GameObject gameObject: gameObjects()){ //deleting unnecessary game objects
+            if(gameObject.getCenter().x() > currentMaxX | gameObject.getCenter().x() < currentMinX |
+                    gameObject.getCenter().y() > this.windowController.getWindowDimensions().y() |
+                    (gameObject.getCenter().y() < 0 && !gameObject.getTag().equals(Fruit.FRUIT))) {
+                gameObjects().removeGameObject(gameObject);
+            }
         }
     }
 
@@ -256,10 +247,11 @@ public class PepseGameManager extends GameManager {
 
         //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
         // the leaves should NOT collide with the player
+
         for (TreeInfo tree : trees) {
             gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
             for (GameObject leaf : tree.getLeaves()) {
-                gameObjects().addGameObject(leaf, Layer.STATIC_OBJECTS);
+                gameObjects().addGameObject(leaf, Layer.BACKGROUND);
             }
             for (GameObject fruit : tree.getFruits()) {
                 gameObjects().addGameObject(fruit, Layer.STATIC_OBJECTS);

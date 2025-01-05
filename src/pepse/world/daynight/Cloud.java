@@ -64,7 +64,7 @@ public class Cloud {
                 0f,  // Starting value for the transition
                 1f,  // Ending value for the transition (progress from 0 to 1)
                 Transition.LINEAR_INTERPOLATOR_FLOAT,  // The interpolation function (linear interpolation)
-                3f,  // Duration of the transition in seconds (move every 3 seconds)
+                4f,  // Duration of the transition in seconds (move every 3 seconds)
                 Transition.TransitionType.TRANSITION_LOOP,  // Loop the transition continuously
                 null  // No additional logic on completion
         );
