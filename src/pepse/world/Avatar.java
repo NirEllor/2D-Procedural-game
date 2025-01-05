@@ -9,6 +9,7 @@ import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.world.trees.Fruit;
+import pepse.world.trees.TreeTrunk;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -21,7 +22,8 @@ public class Avatar  extends GameObject {
     private static final float VELOCITY_X = 400;
     private static final float VELOCITY_Y = -650;
     public static final float RUN_ENERGY_LOSS = 0.5F;
-    public static final int JUMP_ENERGY_LOSS = 11;
+    public static final int JUMP_ENERGY_LOSS_FIX = 5;
+    public static final int JUMP_ENERGY_LOSS = 10;
     public static final int IDLE_ENERGY_GAIN = 1;
     public static final int MAX_ENERGY = 100;
     public static final int MIN_ENERGY = 0;
@@ -88,7 +90,7 @@ public class Avatar  extends GameObject {
             this.transform().setVelocityY(0); // Stop any vertical motion
         }
 
-        if (other.getTag().equals(Block.BLOCK_TAG)) {
+        if (other.getTag().equals(Terrain.GROUND) || other.getTag().equals(TreeTrunk.TREE_TRUNK)) {
             this.touchingTerrain = true;
         }
 
@@ -101,7 +103,7 @@ public class Avatar  extends GameObject {
     public void onCollisionStay(GameObject other, Collision collision) {
         super.onCollisionStay(other, collision);
 
-        if (other.getTag().equals(Block.BLOCK_TAG)) {
+        if (other.getTag().equals(Terrain.GROUND) || other.getTag().equals(TreeTrunk.TREE_TRUNK)) {
 //            if (!inputListener.isKeyPressed(KeyEvent.VK_LEFT) && !inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
 //                this.transform().setVelocityX(0); // Stop any vertical motion
 //            }
@@ -113,7 +115,7 @@ public class Avatar  extends GameObject {
     public void onCollisionExit(GameObject other) {
         super.onCollisionExit(other);
 
-        if (other.getTag().equals(Block.BLOCK_TAG)) {
+        if (other.getTag().equals(Terrain.GROUND) || other.getTag().equals(TreeTrunk.TREE_TRUNK)) {
             this.touchingTerrain = false;
         }
     }
@@ -157,13 +159,13 @@ public class Avatar  extends GameObject {
         super.update(deltaTime);
         float xVel = MIN_ENERGY;
 
-        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT) && !inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && energy >= RUN_ENERGY_LOSS) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)  && !inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && energy >= RUN_ENERGY_LOSS) {
             handleRunning(true);
             xVel -= VELOCITY_X;
-        } else if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && !inputListener.isKeyPressed(KeyEvent.VK_LEFT) && energy >= RUN_ENERGY_LOSS) {
+        } else if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT)  && !inputListener.isKeyPressed(KeyEvent.VK_LEFT) && energy >= RUN_ENERGY_LOSS) {
             handleRunning(false);
             xVel += VELOCITY_X;
-        } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && energy >= JUMP_ENERGY_LOSS && getVelocity().y() == MIN_ENERGY) {
+        } else if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && touchingTerrain && energy >= 10) {
             handleJumping();
         } else {
             handleIdle();
@@ -197,7 +199,7 @@ public class Avatar  extends GameObject {
 
     private void handleJumping() {
         transform().setVelocityY(VELOCITY_Y * VELOCITY_FACTOR);
-        decreaseEnergy(JUMP_ENERGY_LOSS);
+        decreaseEnergy(JUMP_ENERGY_LOSS_FIX);
         updateAvatarJumpImage();
         rainCallback.run();
 

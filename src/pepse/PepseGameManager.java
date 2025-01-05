@@ -57,7 +57,7 @@ public class PepseGameManager extends GameManager {
         this.windowController = windowController;
 
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        windowController.setTargetFramerate(50);
+        windowController.setTargetFramerate(40);
         this.windowDimensions = windowController.getWindowDimensions();
 
         createDayNight();
@@ -109,7 +109,6 @@ public class PepseGameManager extends GameManager {
     private void createClouds() {
         allClouds = new ArrayList<>();
         ArrayList<GameObject> cloud;
-
         for (int i = 0; i < 6; i++) {
             cloud = Cloud.createCloud(new Vector2(-200 * (i), 100 * (i % 3 + 1)), seed);
             allClouds.add(cloud);
@@ -210,8 +209,10 @@ public class PepseGameManager extends GameManager {
 
     @Override
     public void update(float deltaTime) {
-
         super.update(deltaTime);
+
+
+
 
         if (userInputListener.isKeyPressed(KeyEvent.VK_ESCAPE)) windowController.closeWindow();
 
