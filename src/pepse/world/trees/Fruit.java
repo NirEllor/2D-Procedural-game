@@ -10,7 +10,7 @@ import pepse.world.Avatar;
 public class Fruit extends GameObject {
 
     private static final float RESPAWN_TIME = 30;
-    public static final int MOVE_COORDINATE = 100;
+    public static final int MOVE_COORDINATE = 400;
     private Vector2 saveCenter;
     public static final String FRUIT = "Fruit";
 
