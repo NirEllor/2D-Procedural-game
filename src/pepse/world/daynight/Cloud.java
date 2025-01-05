@@ -17,6 +17,10 @@ public class Cloud {
     private static final Color BASE_CLOUD_COLOR = new Color(255, 255, 255);
     private static final int BLOCK_SIZE = 30; // גודל כל בלוק בענן
     private static final float CLOUD_SPEED = 50f; // מהירות הענן (פיקסלים בשנייה)
+    public static final int MOVE_FACTOR = 1;
+    public static final float INITIAL_VALUE = 0f;
+    public static final float END_VALUE = 1f;
+    public static final float TRANSITION_TIME = 4f;
     static int[][] cloudShape = new int[][]{
             {0, 1, 1, 0, 0, 0},
             {1, 1, 1, 0, 1, 0},
@@ -59,12 +63,12 @@ public class Cloud {
                 (Float t) -> {
                     // This lambda defines how the transition will update the block's position
                     // 't' represents the time progress of the transition (from 0 to 1)
-                    block.setCenter(new Vector2(block.getCenter().x() + 1, block.getCenter().y()));
+                    block.setCenter(new Vector2(block.getCenter().x() + MOVE_FACTOR, block.getCenter().y()));
                 },
-                0f,  // Starting value for the transition
-                1f,  // Ending value for the transition (progress from 0 to 1)
+                INITIAL_VALUE,  // Starting value for the transition
+                END_VALUE,  // Ending value for the transition (progress from 0 to 1)
                 Transition.LINEAR_INTERPOLATOR_FLOAT,  // The interpolation function (linear interpolation)
-                4f,  // Duration of the transition in seconds (move every 3 seconds)
+                TRANSITION_TIME,  // Duration of the transition in seconds (move every 3 seconds)
                 Transition.TransitionType.TRANSITION_LOOP,  // Loop the transition continuously
                 null  // No additional logic on completion
         );

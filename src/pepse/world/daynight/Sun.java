@@ -11,27 +11,32 @@ import java.awt.*;
 public class Sun {
 
     private static final float SHRINK_HEIGHT = (float) 2 / 3;
+    public static final int SUN_COORDINATE = 100;
+    private static final float HALF = 0.5f;
+    public static final float INITIAL_VALUE = 0f;
+    public static final float FINAL_VALUE = 360f;
+    public static final String SUN = "Sun";
 
     public static GameObject create(Vector2 windowDimensions, float cycleLength){
 
         float y = windowDimensions.y() * SHRINK_HEIGHT;
-        Vector2 initialSunCenter = new Vector2(windowDimensions.x() / 2, y/2);
+        Vector2 initialSunCenter = new Vector2(windowDimensions.x() * HALF, y * HALF);
 
         GameObject sun = new GameObject(initialSunCenter,
-                 new Vector2(100, 100), new OvalRenderable(Color.YELLOW));
+                 new Vector2(SUN_COORDINATE, SUN_COORDINATE), new OvalRenderable(Color.YELLOW));
 
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
         // TODO : check with nir what to choose
-        Vector2 cycleCenter = new Vector2(windowDimensions.x() / 2, y);  // The ground center
+        Vector2 cycleCenter = new Vector2(windowDimensions.x() * HALF, y);  // The ground center
 
 
         new Transition<Float>(sun, (Float angle) -> sun.setCenter(initialSunCenter.subtract(cycleCenter).
-                rotated(angle).add(cycleCenter)), 0f, 360f,
+                rotated(angle).add(cycleCenter)), INITIAL_VALUE, FINAL_VALUE,
                 Transition.LINEAR_INTERPOLATOR_FLOAT, cycleLength,
                 Transition.TransitionType.TRANSITION_LOOP, null);
 
-        sun.setTag("Sun");
+        sun.setTag(SUN);
 
         return sun;
 

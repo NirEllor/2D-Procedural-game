@@ -10,6 +10,7 @@ import java.awt.*;
 public class Sky {
 
     private static final Color BASIC_SKY_COLOR = Color.decode("#80C6E5");
+    public static final String SKY = "sky";
 
     public static GameObject create(Vector2 windowDimensions){
         GameObject sky = new GameObject(
@@ -18,7 +19,7 @@ public class Sky {
 
         sky.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
-        sky.setTag("sky");
+        sky.setTag(SKY);
 
         return sky;
     }

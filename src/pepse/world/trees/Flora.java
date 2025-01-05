@@ -10,12 +10,14 @@ import java.util.Random;
 
 public class Flora {
 
+    private static final float HALF = 0.5f;
+    private static final float FACTOR = 0.1f;
+    private static final int MIDDLE = 100;
+    private static final int RANGE = 40;
     private final Terrain terrain;
     private final Vector2 windowDimensions;
     private final int seed;
     Random rand;
-    private static final int FRUIT_SIZE = 15;
-    private static final Color FRUIT_COLOR = new Color(255, 100, 100);
 
     public Flora(Terrain terrain, Vector2 windowDimensions, int seed){
         this.seed = seed;
@@ -30,13 +32,13 @@ public class Flora {
         ArrayList<TreeInfo> trees = new ArrayList<>();
         for (int x = minX; x < maxX; x++) {
             this.rand = new Random(Objects.hash(x, seed));
-            if (this.rand.nextFloat() < 0.1) {
-                if (Math.abs(x - (windowDimensions.x() / 2)) < 100) {
+            if (this.rand.nextFloat() < FACTOR) {
+                if (Math.abs(x - (windowDimensions.x() * HALF)) < MIDDLE) {
                     continue;
                 }
                 Tree.create(trees, terrain, x, this.rand);
 
-                x+=100;
+                x += RANGE;
             }
         }
         return trees;

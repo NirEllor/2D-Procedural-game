@@ -41,6 +41,8 @@ public class Avatar  extends GameObject {
     public static final String SRC_ASSETS_JUMP_2_PNG = "src/assets/jump_2.png";
     public static final String SRC_ASSETS_JUMP_3_PNG = "src/assets/jump_3.png";
     public static final String AVATAR = "avatar";
+    public static final float VELOCITY_FACTOR = 0.75F;
+    public static final float TIME_BETWEEN_CLIPS = 1F;
 
     private final UserInputListener inputListener;
     private final ImageReader imageReader;
@@ -142,9 +144,9 @@ public class Avatar  extends GameObject {
         imageReader.readImage(SRC_ASSETS_JUMP_3_PNG, true)
         };
 
-        idleAnimation = new AnimationRenderable(idleAnimations, 1F);
-        runAnimation = new AnimationRenderable(runAnimations, 1F);
-        jumpAnimation = new AnimationRenderable(jumpAnimations, 1F);
+        idleAnimation = new AnimationRenderable(idleAnimations, TIME_BETWEEN_CLIPS);
+        runAnimation = new AnimationRenderable(runAnimations, TIME_BETWEEN_CLIPS);
+        jumpAnimation = new AnimationRenderable(jumpAnimations, TIME_BETWEEN_CLIPS);
 
     }
     @Override
@@ -191,7 +193,7 @@ public class Avatar  extends GameObject {
     }
 
     private void handleJumping() {
-        transform().setVelocityY(VELOCITY_Y * 0.75F);
+        transform().setVelocityY(VELOCITY_Y * VELOCITY_FACTOR);
         decreaseEnergy(JUMP_ENERGY_LOSS);
         updateAvatarJumpImage();
         rainCallback.run();
