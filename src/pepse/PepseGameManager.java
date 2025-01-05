@@ -4,6 +4,7 @@ import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
+import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
@@ -30,7 +31,6 @@ import java.util.Random;
 public class PepseGameManager extends GameManager {
 
     private static final int AVATAR_TERRAIN_DIST = 100;
-    private static final float GRAVITY = 600f;
     private static final int RAIN_DROP_SIZE = 10;
     private static final Color RAIN_DROP_COLOR = new Color(173, 216, 230);
     private static final float CYCLE_LENGTH = 30;
@@ -135,64 +135,78 @@ public class PepseGameManager extends GameManager {
 
     }
 
-//    private void addDelayedMovement(GameObject block, float delay) {
-//        new ScheduledTask(
-//                block,
-//                delay,
-//                false,
-//                () -> rainMovement(block)
-//        );
-//    }
-
-    private void rainMovement(GameObject rainDrop){
-        // Transition for transparency and removal
-        new Transition<>(
-                rainDrop,
-                alpha -> {
-                    if (alpha <= 0) {
-                        gameObjects().removeGameObject(rainDrop, Layer.UI);
-                    } else {
-                        rainDrop.renderer().setRenderable(
-                                new OvalRenderable(
-                                        new Color(RAIN_DROP_COLOR.getRed(), RAIN_DROP_COLOR.getGreen(),
-                                                RAIN_DROP_COLOR.getBlue(), (int) (alpha * 255))
-                                )
-                        );
-                    }
-                },
-                1f, // Starting alpha
-                0f, // Ending alpha
-                Transition.LINEAR_INTERPOLATOR_FLOAT,
-                10f, // Duration of fade-out
-                Transition.TransitionType.TRANSITION_ONCE,
-                null
-        );
-    }
 
     private void createRain(ArrayList<ArrayList<GameObject>> finalCloud) {
         Random rainRand = new Random(seed);
-//        float delay = rainRand.nextFloat();
+
         for (ArrayList<GameObject> arr : finalCloud) {
-            for ( GameObject obj : arr) {
-                GameObject rainDrop = new GameObject(
-                        obj.getTopLeftCorner(),
-                        new Vector2(RAIN_DROP_SIZE, RAIN_DROP_SIZE),
-                        new OvalRenderable(RAIN_DROP_COLOR)
-                );
+            for (GameObject obj : arr) {
+                int numRaindrops = rainRand.nextInt(5) + 1; // Random number of raindrops between 1 and 5
 
-                //addDelayedMovement(rainDrop, delay);
-                rainMovement(rainDrop);
-                //delay = rainRand.nextFloat();
+                for (int i = 0; i < numRaindrops; i++) {
+                    GameObject rainDrop = new GameObject(
+                            obj.getTopLeftCorner(),
+                            new Vector2(RAIN_DROP_SIZE, RAIN_DROP_SIZE),
+                            new OvalRenderable(RAIN_DROP_COLOR)
+                    );
+                    rainDrop.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
-                rainDrop.transform().setAccelerationY(GRAVITY);
-
-                rainDrop.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-
-                gameObjects().addGameObject(rainDrop, Layer.UI); // Use a layer guaranteed to be visible
+                    float delay = rainRand.nextFloat() * 2f; // Random delay between 0 and 2 seconds
+                    scheduleRainDropMovement(rainDrop, obj, delay);
+                }
             }
-
         }
     }
+
+    private void scheduleRainDropMovement(GameObject rainDrop, GameObject cloud, float delay) {
+        new ScheduledTask(
+                cloud, // Use cloud as the anchor for the task
+                delay,
+                false, // One-time task
+                () -> {
+                    // Add the raindrop to the game right before it starts falling
+                    gameObjects().addGameObject(rainDrop, Layer.BACKGROUND);
+                    startRainDropMovement(rainDrop, cloud);
+                }
+        );
+    }
+
+    private void startRainDropMovement(GameObject rainDrop, GameObject cloud) {
+        // Transition for falling movement (Y-axis)
+        new Transition<>(
+                rainDrop,
+                pos -> rainDrop.setTopLeftCorner(new Vector2(cloud.getTopLeftCorner().x(), pos)),
+                cloud.getTopLeftCorner().y(),
+                cloud.getTopLeftCorner().y() + 500, // Move 500 pixels down
+                Transition.LINEAR_INTERPOLATOR_FLOAT,
+                3f, // Duration of fall (3 seconds)
+                Transition.TransitionType.TRANSITION_ONCE,
+                () -> gameObjects().removeGameObject(rainDrop, Layer.BACKGROUND) // Remove when done
+        );
+
+        // Transition for transparency change (alpha)
+        new Transition<>(
+                rainDrop,
+                alpha -> rainDrop.renderer().setRenderable(
+                        new OvalRenderable(
+                                new Color(
+                                        RAIN_DROP_COLOR.getRed(),
+                                        RAIN_DROP_COLOR.getGreen(),
+                                        RAIN_DROP_COLOR.getBlue(),
+                                        (int) (alpha * 255) // Set alpha value
+                                )
+                        )
+                ),
+                1f, // Starting alpha (fully opaque)
+                0f, // Ending alpha (fully transparent)
+                Transition.LINEAR_INTERPOLATOR_FLOAT,
+                3f, // Duration of fade-out matches the fall duration
+                Transition.TransitionType.TRANSITION_ONCE,
+                null // No callback needed
+        );
+    }
+
+
 
     @Override
     public void update(float deltaTime) {
