@@ -1,7 +1,5 @@
 package pepse.world;
 
-import danogl.GameObject;
-import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
@@ -14,7 +12,6 @@ public class Terrain {
 
     public static final float SHRINK_HEIGHT = (float) 2 / 3;
     public static final String GROUND = "ground";
-    public static final String SURFACE = "SURFACE";
     private final float groundHeightAtX0;
     private final NoiseGenerator noiseGenerator;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
