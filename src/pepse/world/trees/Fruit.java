@@ -35,9 +35,7 @@ public class Fruit extends GameObject {
                 this,
                 RESPAWN_TIME,
                 false,
-                () -> {
-                    this.setCenter(this.saveCenter);
-                }
+                () -> this.setCenter(this.saveCenter)
         );
     }
 }
