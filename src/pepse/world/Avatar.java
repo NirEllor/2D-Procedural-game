@@ -102,6 +102,9 @@ public class Avatar  extends GameObject {
         super.onCollisionStay(other, collision);
 
         if (other.getTag().equals(Block.BLOCK_TAG)) {
+//            if (!inputListener.isKeyPressed(KeyEvent.VK_LEFT) && !inputListener.isKeyPressed(KeyEvent.VK_RIGHT)) {
+//                this.transform().setVelocityX(0); // Stop any vertical motion
+//            }
             this.touchingTerrain = true;
         }
     }

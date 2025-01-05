@@ -4,7 +4,6 @@ import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
-import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
@@ -53,12 +52,12 @@ public class PepseGameManager extends GameManager {
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
                                WindowController windowController) {
 
-        seed = new Random().nextInt(1, 2);
+        seed = new Random().nextInt();
         this.userInputListener = inputListener;
         this.windowController = windowController;
 
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        windowController.setTargetFramerate(20);
+        windowController.setTargetFramerate(50);
         this.windowDimensions = windowController.getWindowDimensions();
 
         createDayNight();
@@ -172,7 +171,7 @@ public class PepseGameManager extends GameManager {
 
     private void createRain(ArrayList<ArrayList<GameObject>> finalCloud) {
         Random rainRand = new Random(seed);
-        float delay = rainRand.nextFloat(0,3);
+//        float delay = rainRand.nextFloat();
         for (ArrayList<GameObject> arr : finalCloud) {
             for ( GameObject obj : arr) {
                 GameObject rainDrop = new GameObject(
