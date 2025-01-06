@@ -17,7 +17,7 @@ public class Cloud {
     private static final Color BASE_CLOUD_COLOR = new Color(255, 255, 255);
     private static final int BLOCK_SIZE = 20; // גודל כל בלוק בענן
     private static final float CLOUD_SPEED = 50f; // מהירות הענן (פיקסלים בשנייה)
-    public static final int MOVE_FACTOR = 2;
+    public static final int MOVE_FACTOR = 1;
     public static final float INITIAL_VALUE = 0f;
     public static final float END_VALUE = 1f;
     public static final float TRANSITION_TIME = 3f;

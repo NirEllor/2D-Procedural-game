@@ -6,23 +6,40 @@ import danogl.components.Transition;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
-import static pepse.world.trees.Tree.LEAF_SIZE;
-
+/**
+ * This class creates a Leaf Object
+ */
 public class Leaf extends GameObject {
 
-    public static final float INITIAL_MOVEMENT = 8f;
-    public static final float TRANSITION_TIME = 3f;
-    public static final float SIZE_FACTOR = 1.1f;
+    // Constants
+    private static final float INITIAL_MOVEMENT = 8f;
+    private static final float TRANSITION_TIME = 3f;
+    private static final float SIZE_FACTOR = 1.1f;
 
-    public Leaf(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, float delay) {
+    // Fields
+    private final int leafSize;
+
+    /**
+     * Constructor - Creates a Leaf object
+     * @param topLeftCorner - Vector2 : The coordinates to place the leaf at on the screen
+     * @param dimensions - Vector2 : The leaf dimensions
+     * @param renderable - Renderable : The renderer of the leaf
+     * @param delay - float : The delay in the movement of the leaf
+     */
+    public Leaf(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, float delay,
+                int leafSize) {
         super(topLeftCorner, dimensions, renderable);
-        addDelayedMovement(this, delay);
+        this.leafSize = leafSize;
+        addDelayedMovement(delay);
     }
 
-    private void addLeafMovement(GameObject leaf) {
+    /**
+     * Handles the leaf movement. Changes the angle of the leaf as well as its size.
+     */
+    private void addLeafMovement() {
         new Transition<>(
-                leaf,
-                (Float angle) -> leaf.renderer().setRenderableAngle(angle),
+                this,
+                (Float angle) -> this.renderer().setRenderableAngle(angle),
                 -INITIAL_MOVEMENT, INITIAL_MOVEMENT,
                 Transition.CUBIC_INTERPOLATOR_FLOAT,
                 TRANSITION_TIME,
@@ -31,8 +48,9 @@ public class Leaf extends GameObject {
         );
 
 
-        new Transition<>(leaf, leaf::setDimensions, new Vector2(LEAF_SIZE, LEAF_SIZE),
-                new Vector2(LEAF_SIZE * SIZE_FACTOR, LEAF_SIZE * SIZE_FACTOR),
+        new Transition<>(this, this::setDimensions,
+                new Vector2(this.leafSize, this.leafSize),
+                new Vector2(this.leafSize * SIZE_FACTOR, this.leafSize * SIZE_FACTOR),
                 Transition.CUBIC_INTERPOLATOR_VECTOR,
                 TRANSITION_TIME,
                 Transition.TransitionType.TRANSITION_LOOP,
@@ -41,12 +59,18 @@ public class Leaf extends GameObject {
 
     }
 
-    private void addDelayedMovement(GameObject leaf, float delay) {
+    /**
+     * Delays the movement of the leaf
+     * @param delay - float : The delay in the movement of the leaf
+     */
+    private void addDelayedMovement(float delay) {
+
         new ScheduledTask(
-                leaf,
+                this,
                 delay,
                 false,
-                () -> addLeafMovement(leaf)
+                this::addLeafMovement
         );
+
     }
 }

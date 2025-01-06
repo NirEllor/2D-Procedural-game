@@ -34,6 +34,7 @@ public class PepseGameManager extends GameManager {
     private static final int RAIN_DROP_SIZE = 10;
     private static final Color RAIN_DROP_COLOR = new Color(173, 216, 230);
     private static final float CYCLE_LENGTH = 30;
+    public static final float FACTOR = 0.5f;
 
 
     private UserInputListener userInputListener;
@@ -66,7 +67,7 @@ public class PepseGameManager extends GameManager {
         terrain = new Terrain(windowDimensions, seed);
         makeBlocks(0, (int) windowDimensions.x());
 
-        flora = new Flora(terrain, windowDimensions, seed);
+        flora = new Flora(terrain::groundHeightAt, windowDimensions, seed);
         makeTrees(0, (int) windowDimensions.x());
 
         createAvatar(inputListener, imageReader);
@@ -75,7 +76,7 @@ public class PepseGameManager extends GameManager {
 
     private void createAvatar(UserInputListener inputListener, ImageReader imageReader) {
 
-        float xInitialAvatarLocation = windowDimensions.mult(0.5f).x();
+        float xInitialAvatarLocation = windowDimensions.mult(FACTOR).x();
         float yInitialAvatarLocation = terrain.groundHeightAt(xInitialAvatarLocation) - AVATAR_TERRAIN_DIST;
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
 
@@ -108,8 +109,8 @@ public class PepseGameManager extends GameManager {
     private void createClouds() {
         allClouds = new ArrayList<>();
         ArrayList<GameObject> cloud;
-        for (int i = 0; i < 6; i++) {
-            cloud = Cloud.createCloud(new Vector2(-200 * (i), 100 * (i % 3 + 1)), seed);
+        for (int i = 0; i < 12; i++) {
+            cloud = Cloud.createCloud(new Vector2(-400 * (i), 100 * (i % 3 + 1)), seed);
             allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
@@ -208,33 +209,32 @@ public class PepseGameManager extends GameManager {
 
     @Override
     public void update(float deltaTime) {
+
         super.update(deltaTime);
-
-
-
 
         if (userInputListener.isKeyPressed(KeyEvent.VK_ESCAPE)) windowController.closeWindow();
 
         if (camera().getCenter().x() != currentCameraCenterX) {
 
-            float space = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
+            float cameraMovementRange = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
 
-            if (space != 0) {
-                if (space < 0) { //means avatar went right
+            if (cameraMovementRange != 0) {
+                if (cameraMovementRange > 0) { //means avatar went left
+                    makeBlocks((int)(currentMinX - cameraMovementRange), (int)currentMinX);
 
-                    makeBlocks((int) currentMaxX, (int) (currentMaxX - space));
-
-                    makeTrees((int) currentMaxX, (int) (currentMaxX - space));
-
-                    currentMaxX += Block.SIZE;
-                }
-                else { //means avatar went left
-
-                    makeBlocks((int)(currentMinX - space), (int)currentMinX);
-
-                    makeTrees((int)(currentMinX - space), (int)currentMinX);
+                    makeTrees((int)(currentMinX - cameraMovementRange), (int)currentMinX);
 
                     currentMinX -= Block.SIZE;
+
+                }
+                else { //means avatar went right
+
+                    makeBlocks((int) currentMaxX, (int) (currentMaxX - cameraMovementRange));
+
+                    makeTrees((int) currentMaxX, (int) (currentMaxX - cameraMovementRange));
+
+                    currentMaxX += Block.SIZE;
+
                 }
 
             }
@@ -266,7 +266,7 @@ public class PepseGameManager extends GameManager {
         // the leaves should NOT collide with the player
 
         for (TreeInfo tree : trees) {
-            gameObjects().addGameObject(tree.getTree(), Layer.STATIC_OBJECTS);
+            gameObjects().addGameObject(tree.getTreeTrunk(), Layer.STATIC_OBJECTS);
             for (GameObject leaf : tree.getLeaves()) {
                 gameObjects().addGameObject(leaf, Layer.BACKGROUND);
             }
