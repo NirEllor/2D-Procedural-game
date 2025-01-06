@@ -246,17 +246,20 @@ public class PepseGameManager extends GameManager {
 
     private void removeObjects() {
         for(GameObject gameObject: gameObjects()) { //deleting unnecessary game objects
-            if (gameObject.getCenter().x() > currentMaxX | gameObject.getCenter().x() < currentMinX |
+            if (gameObject.getCenter().x() > currentMaxX |
+                    ((gameObject.getCenter().x()) < currentMinX & (!gameObject.getTag().equals(Cloud.CLOUD)) |
                     gameObject.getCenter().y() > this.windowController.getWindowDimensions().y() |
-                    (gameObject.getCenter().y() < 0 && !gameObject.getTag().equals(Fruit.FRUIT))) {
-                if (gameObject.getTag().equals("cloud") && gameObject.getCenter().x() > currentMaxX) {
-                        gameObject.setCenter(new Vector2(currentMinX + 10, gameObject.getCenter().y()));
-                } else {
+                    (gameObject.getCenter().y() < 0 & !gameObject.getTag().equals(Fruit.FRUIT)))) {
+//                if (gameObject.getTag().equals("cloud") && gameObject.getCenter().x() > currentMaxX) {
+//                        gameObject.setCenter(new Vector2(currentMinX + 10, gameObject.getCenter().y()));
+//                } else {
+//                    gameObjects().removeGameObject(gameObject);
+//                }
                     gameObjects().removeGameObject(gameObject);
                 }
             }
         }
-    }
+
 
     private void makeTrees(int min, int max) {
 
