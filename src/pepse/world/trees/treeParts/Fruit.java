@@ -1,4 +1,4 @@
-package pepse.world.trees;
+package pepse.world.trees.treeParts;
 
 import danogl.GameObject;
 import danogl.collisions.Collision;

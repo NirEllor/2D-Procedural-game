@@ -8,8 +8,8 @@ import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.world.trees.Fruit;
-import pepse.world.trees.TreeTrunk;
+import pepse.world.trees.treeParts.Fruit;
+import pepse.world.trees.treeParts.TreeTrunk;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;

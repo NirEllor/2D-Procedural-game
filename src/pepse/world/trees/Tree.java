@@ -4,6 +4,10 @@ import danogl.GameObject;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
+import pepse.world.trees.treeParts.Fruit;
+import pepse.world.trees.treeParts.Leaf;
+import pepse.world.trees.treeParts.TreeTrunk;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;

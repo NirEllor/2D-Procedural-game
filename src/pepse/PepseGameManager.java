@@ -19,7 +19,7 @@ import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Flora;
-import pepse.world.trees.Fruit;
+import pepse.world.trees.treeParts.Fruit;
 import pepse.world.trees.TreeInfo;
 
 import java.awt.Color;
