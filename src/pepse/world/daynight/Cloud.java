@@ -25,7 +25,7 @@ public class Cloud {
     private static final int MOVE_FACTOR = 3;
     private static final float INITIAL_VALUE = 0f;
     private static final float TRANSITION_TIME = 3f;
-    public static final int STARTING_POINT = -100;
+    private static final int STARTING_POINT = -100;
     private static final int[][] cloudShape = new int[][]{
             {0, 1, 1, 0, 0, 0},
             {1, 1, 1, 0, 1, 0},
