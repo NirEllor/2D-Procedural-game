@@ -21,20 +21,38 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Flora;
 import pepse.world.trees.treeParts.Fruit;
 import pepse.world.trees.TreeInfo;
-
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * The PepseGameManager class is responsible for managing the entire game.
+ * It initializes the world elements (terrain, trees, avatar, clouds, day/night cycle),
+ * handles user input, and updates game objects during the game loop.
+ */
 public class PepseGameManager extends GameManager {
 
-    private static final int AVATAR_TERRAIN_DIST = 100;
+    private static final int AVATAR_TERRAIN_DIST = 40;
     private static final int RAIN_DROP_SIZE = 10;
     private static final Color RAIN_DROP_COLOR = new Color(173, 216, 230);
     private static final float CYCLE_LENGTH = 30;
-    public static final float FACTOR = 0.5f;
+    private static final float FACTOR = 0.5f;
+    private static final int WHITE = 255;
+    private static final int MOVE_FACTOR = 500;
+    private static final float TRANSITION_TIME = 3f;
+    private static final float STARTING_TIME = 1f;
+    private static final float FINISH_TIME = 0f;
+    private static final float DELAY = 2f;
+    private static final int BOUND = 5;
+    private static final int X_CLOUD = -400;
+    private static final int ONE_HUNDRED = 100;
+    private static final int THREE = 3;
+    private static final int NUMBER_OF_CLOUDS = 12;
+    private static final int THIRTY = 30;
+    private static final int THREE_HUNDRED = 300;
+    private static final int FORTY = 40;
 
 
     private UserInputListener userInputListener;
@@ -49,27 +67,42 @@ public class PepseGameManager extends GameManager {
     private Vector2 windowDimensions;
 
 
-    @Override
-    public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener,
-                               WindowController windowController) {
 
+    /**
+     * Initializes the game, including terrain, trees, clouds, avatar, and day/night cycle.
+     *
+     * @param imageReader Reader for loading images.
+     * @param soundReader Reader for loading sounds.
+     * @param inputListener Listener for handling user input.
+     * @param windowController Controller for managing the game window.
+     */
+    @Override
+    public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener
+            inputListener,
+                               WindowController windowController) {
+        super.initializeGame(imageReader, soundReader, inputListener, windowController);
+        // create the seed
         seed = new Random().nextInt();
+
+        // UserInput and WindowController
         this.userInputListener = inputListener;
         this.windowController = windowController;
-
-        super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        windowController.setTargetFramerate(40);
+        windowController.setTargetFramerate(FORTY);
         this.windowDimensions = windowController.getWindowDimensions();
 
+        // Night. Day and Clouds
         createDayNight();
         createClouds();
 
+        // Terrain
         terrain = new Terrain(windowDimensions, seed);
         makeBlocks(0, (int) windowDimensions.x());
 
+        // Trees, Leafs and Fruits
         flora = new Flora(terrain::groundHeightAt, windowDimensions, seed);
         makeTrees(0, (int) windowDimensions.x());
 
+        // Avatar
         createAvatar(inputListener, imageReader);
 
     }
@@ -81,7 +114,6 @@ public class PepseGameManager extends GameManager {
         Vector2 initialAvatarLocation = new Vector2(xInitialAvatarLocation, yInitialAvatarLocation);
 
         Avatar avatar = new Avatar(initialAvatarLocation, inputListener, imageReader);
-//        avatar.setCloud(allClouds);
         avatar.setRainCallback(() -> createRain(allClouds));
 
         createDisplayEnergy(avatar);
@@ -100,8 +132,8 @@ public class PepseGameManager extends GameManager {
 
     private void createDisplayEnergy(Avatar avatar) {
         EnergyDisplay energyDisplay = new EnergyDisplay(
-                new Vector2(windowDimensions.x() - 300, 100),
-                new Vector2(100, 30));
+                new Vector2(windowDimensions.x() - THREE_HUNDRED, ONE_HUNDRED),
+                new Vector2(ONE_HUNDRED, THIRTY));
         gameObjects().addGameObject(energyDisplay);
         avatar.setEnergyUpdateCallback(energyDisplay::run);
     }
@@ -109,8 +141,8 @@ public class PepseGameManager extends GameManager {
     private void createClouds() {
         allClouds = new ArrayList<>();
         ArrayList<GameObject> cloud;
-        for (int i = 0; i < 12; i++) {
-            cloud = Cloud.createCloud(new Vector2(-400 * (i), 100 * (i % 3 + 1)), seed);
+        for (int i = 0; i < NUMBER_OF_CLOUDS; i++) {
+            cloud = Cloud.createCloud(new Vector2(X_CLOUD * (i), ONE_HUNDRED * (i % THREE + 1)), seed);
             allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
@@ -140,7 +172,7 @@ public class PepseGameManager extends GameManager {
 
         for (ArrayList<GameObject> arr : finalCloud) {
             for (GameObject obj : arr) {
-                int numRaindrops = rainRand.nextInt(5) + 1; // Random number of raindrops between 1 and 5
+                int numRaindrops = rainRand.nextInt(BOUND) + 1;
 
                 for (int i = 0; i < numRaindrops; i++) {
                     GameObject rainDrop = new GameObject(
@@ -150,7 +182,7 @@ public class PepseGameManager extends GameManager {
                     );
                     rainDrop.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
-                    float delay = rainRand.nextFloat() * 2f; // Random delay between 0 and 2 seconds
+                    float delay = rainRand.nextFloat() * DELAY; // Random delay between 0 and 2 seconds
                     scheduleRainDropMovement(rainDrop, obj, delay);
                 }
             }
@@ -176,9 +208,9 @@ public class PepseGameManager extends GameManager {
                 rainDrop,
                 pos -> rainDrop.setTopLeftCorner(new Vector2(cloud.getTopLeftCorner().x(), pos)),
                 cloud.getTopLeftCorner().y(),
-                cloud.getTopLeftCorner().y() + 500, // Move 500 pixels down
+                cloud.getTopLeftCorner().y() + MOVE_FACTOR, // Move 500 pixels down
                 Transition.LINEAR_INTERPOLATOR_FLOAT,
-                3f, // Duration of fall (3 seconds)
+                TRANSITION_TIME, // Duration of fall (3 seconds)
                 Transition.TransitionType.TRANSITION_ONCE,
                 () -> gameObjects().removeGameObject(rainDrop, Layer.BACKGROUND) // Remove when done
         );
@@ -192,21 +224,27 @@ public class PepseGameManager extends GameManager {
                                         RAIN_DROP_COLOR.getRed(),
                                         RAIN_DROP_COLOR.getGreen(),
                                         RAIN_DROP_COLOR.getBlue(),
-                                        (int) (alpha * 255) // Set alpha value
+                                        (int) (alpha * WHITE) // Set alpha value
                                 )
                         )
                 ),
-                1f, // Starting alpha (fully opaque)
-                0f, // Ending alpha (fully transparent)
+                STARTING_TIME, // Starting alpha (fully opaque)
+                FINISH_TIME, // Ending alpha (fully transparent)
                 Transition.LINEAR_INTERPOLATOR_FLOAT,
-                3f, // Duration of fade-out matches the fall duration
+                TRANSITION_TIME, // Duration of fade-out matches the fall duration
                 Transition.TransitionType.TRANSITION_ONCE,
                 null // No callback needed
         );
     }
 
 
-
+    /**
+     * Updates the game state on each frame.
+     * Handles camera movement, dynamically generates and removes game objects (terrain, trees) as needed,
+     * and checks for user input to close the game window.
+     *
+     * @param deltaTime Time passed since the last frame (in seconds).
+     */
     @Override
     public void update(float deltaTime) {
 
@@ -216,8 +254,7 @@ public class PepseGameManager extends GameManager {
 
         if (camera().getCenter().x() != currentCameraCenterX) {
 
-            float cameraMovementRange = (currentCameraCenterX - camera().getCenter().x()); //checking how much the camera moved
-
+            float cameraMovementRange = (currentCameraCenterX - camera().getCenter().x());
             if (cameraMovementRange != 0) {
                 if (cameraMovementRange > 0) { //means avatar went left
                     makeBlocks((int)(currentMinX - cameraMovementRange), (int)currentMinX);
@@ -247,14 +284,10 @@ public class PepseGameManager extends GameManager {
     private void removeObjects() {
         for(GameObject gameObject: gameObjects()) { //deleting unnecessary game objects
             if (gameObject.getCenter().x() > currentMaxX |
-                    ((gameObject.getCenter().x()) < currentMinX & (!gameObject.getTag().equals(Cloud.CLOUD)) |
+                    ((gameObject.getCenter().x()) < currentMinX &
+                            (!gameObject.getTag().equals(Cloud.CLOUD)) |
                     gameObject.getCenter().y() > this.windowController.getWindowDimensions().y() |
                     (gameObject.getCenter().y() < 0 & !gameObject.getTag().equals(Fruit.FRUIT)))) {
-//                if (gameObject.getTag().equals("cloud") && gameObject.getCenter().x() > currentMaxX) {
-//                        gameObject.setCenter(new Vector2(currentMinX + 10, gameObject.getCenter().y()));
-//                } else {
-//                    gameObjects().removeGameObject(gameObject);
-//                }
                     gameObjects().removeGameObject(gameObject);
                 }
             }
@@ -264,9 +297,6 @@ public class PepseGameManager extends GameManager {
     private void makeTrees(int min, int max) {
 
         ArrayList<TreeInfo> trees = flora.createInRange(min, max);
-
-        //TODO : check layers - The fruits should collide with the player, the player should be stopped by the trunk,
-        // the leaves should NOT collide with the player
 
         for (TreeInfo tree : trees) {
             gameObjects().addGameObject(tree.getTreeTrunk(), Layer.STATIC_OBJECTS);
@@ -286,13 +316,20 @@ public class PepseGameManager extends GameManager {
         }
     }
 
+    /**
+     * Runs the game by starting the game loop.
+     */
     public void run() {
         super.run();
     }
 
+    /**
+     * Main method to launch the game.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         new PepseGameManager().run();
     }
-
 }
 

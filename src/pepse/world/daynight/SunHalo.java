@@ -12,9 +12,8 @@ import java.awt.*;
 public class SunHalo {
 
     // Constants
-    public static final String SUN_HALO = "SunHalo";
-    public static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
-    public static final int SUN_HALO_COORDINATE = 150;
+    private static final Color SUN_HALO_COLOR = new Color(255, 255, 0, 20);
+    private static final int SUN_HALO_COORDINATE = 150;
 
     /**
      * Creates a GameObject representing the Sun in the game.
@@ -30,8 +29,6 @@ public class SunHalo {
         sunHalo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
         sunHalo.addComponent((deltaTime) -> sunHalo.setCenter(sun.getCenter()));
-
-        sunHalo.setTag(SUN_HALO);
 
         return sunHalo;
 

@@ -17,7 +17,7 @@ import static java.lang.Math.max;
 /**
  * This class creates a single Tree object
  */
-public class Tree {
+class Tree {
 
     // Constants
     private static final Color TRUNK_COLOR = new Color(100, 50, 20);

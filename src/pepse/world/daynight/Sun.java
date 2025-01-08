@@ -14,10 +14,13 @@ public class Sun {
 
     // Constants
     private static final float SHRINK_HEIGHT = (float) 2 / 3;
-    public static final int SUN_COORDINATE = 100;
+    private static final int SUN_COORDINATE = 100;
     private static final float HALF = 0.5f;
-    public static final float INITIAL_VALUE = 0f;
-    public static final float FINAL_VALUE = 360f;
+    private static final float INITIAL_VALUE = 0f;
+    private static final float FINAL_VALUE = 360f;
+    /**
+     * A tag for a Sun GameObject
+     */
     public static final String SUN = "Sun";
 
     /**
@@ -52,9 +55,4 @@ public class Sun {
         return sun;
 
     }
-
-
-
-
-
 }

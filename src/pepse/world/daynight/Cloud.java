@@ -11,18 +11,22 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * The Cloud class represents a cloud in the game world.
+ * A cloud is composed of multiple rectangular blocks arranged in a specific shape.
+ * The class provides methods for creating clouds at a given position and animating their movement
+ * across the screen. The clouds move horizontally at a fixed speed, and each block starts moving
+ * after a random delay to create a natural and dynamic effect.
+ */
 public class Cloud {
 
     private static final Color BASE_CLOUD_COLOR = new Color(255, 255, 255);
-    private static final int BLOCK_SIZE = 20; // גודל כל בלוק בענן
-    private static final float CLOUD_SPEED = 50f; // מהירות הענן (פיקסלים בשנייה)
-    public static final int MOVE_FACTOR = 1;
-    public static final float INITIAL_VALUE = 0f;
-    public static final float END_VALUE = 1f;
-    public static final float TRANSITION_TIME = 3f;
-    public static final String CLOUD = "cloud";
-    static int[][] cloudShape = new int[][]{
+    private static final int BLOCK_SIZE = 20;
+    private static final int MOVE_FACTOR = 1;
+    private static final float INITIAL_VALUE = 0f;
+    private static final float END_VALUE = 1f;
+    private static final float TRANSITION_TIME = 3f;
+    private static final int[][] cloudShape = new int[][]{
             {0, 1, 1, 0, 0, 0},
             {1, 1, 1, 0, 1, 0},
             {1, 1, 1, 1, 1, 1},
@@ -30,7 +34,17 @@ public class Cloud {
             {0, 1, 1, 1, 0, 0},
             {0, 0, 0, 0, 0, 0}};
 
-    // Method to create the cloud
+    /** Tag for cloud objects */
+    public static final String CLOUD = "cloud";
+
+    /**
+     * Method to create a cloud composed of multiple blocks.
+     * Each block is created at a specific position based on the cloud shape.
+     *
+     * @param position The starting position of the cloud.
+     * @param seed Random seed to control delays in cloud block movement.
+     * @return ArrayList<GameObject> containing all blocks of the cloud.
+     */
     public static ArrayList<GameObject> createCloud(Vector2 position, int seed) {
         ArrayList<GameObject> cloudBlocks = new ArrayList<>();
 
@@ -68,7 +82,8 @@ public class Cloud {
                 (Float t) -> {
                     // This lambda defines how the transition will update the block's position
                     // 't' represents the time progress of the transition (from 0 to 1)
-                    block.setCenter(new Vector2(block.getCenter().x() + MOVE_FACTOR, block.getCenter().y()));
+                    block.setCenter(new Vector2(block.getCenter().x() + MOVE_FACTOR,
+                            block.getCenter().y()));
                 },
                 INITIAL_VALUE,  // Starting value for the transition
                 END_VALUE,  // Ending value for the transition (progress from 0 to 1)
@@ -87,8 +102,5 @@ public class Cloud {
                 () -> cloudMovement(block)
         );
     }
-
-
-
 }
 

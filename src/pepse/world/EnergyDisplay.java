@@ -2,13 +2,14 @@ package pepse.world;
 
 import danogl.GameObject;
 import danogl.components.CoordinateSpace;
-import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-
-import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The EnergyDisplay class represents an on-screen display for showing the player's current energy level.
+ * It updates dynamically based on the energy value provided and is rendered as text in the game window.
+ */
 public class EnergyDisplay extends GameObject {
 
     /**
@@ -33,6 +34,13 @@ public class EnergyDisplay extends GameObject {
 
 
     }
+
+    /**
+     * Public method to update and render the current energy level.
+     * Calls the private updateEnergy method to handle the display.
+     *
+     * @param currentEnergy The current energy level to display.
+     */
     public void run(float currentEnergy) {
         updateEnergy(currentEnergy);
     }

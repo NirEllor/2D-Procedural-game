@@ -17,8 +17,11 @@ public class Night {
     // Constants
     private static final float INITIAL_OPACITY = 0f;
     private static final float MIDNIGHT_OPACITY = 0.5f;
+    /**
+     * A tag for a night GameObject
+     */
     public static final String NIGHT = "Night";
-    public static final Color NIGHT_COLOR = new Color(0, 0, 0, 1f);
+    private static final Color NIGHT_COLOR = new Color(0, 0, 0, 1f);
 
 
     /**
@@ -43,7 +46,4 @@ public class Night {
 
         return night;
     }
-
-
-
 }

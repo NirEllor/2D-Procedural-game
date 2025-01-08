@@ -6,13 +6,16 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import java.awt.*;
 
+/**
+ * This class creates a GameObject representing the Sky of the world
+ */
 public class Sky {
 
-    /**
-     * This class creates a GameObject representing the Sky of the world
-     */
 
     private static final Color BASIC_SKY_COLOR = Color.decode("#80C6E5");
+    /**
+     * Tag for the Sky GameObject
+     */
     public static final String SKY = "sky";
 
     /**

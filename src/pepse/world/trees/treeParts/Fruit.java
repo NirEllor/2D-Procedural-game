@@ -14,7 +14,10 @@ public class Fruit extends GameObject {
 
     // Constants
     private static final float RESPAWN_TIME = 30;
-    public static final int MOVE_COORDINATE = 400;
+    private static final int MOVE_COORDINATE = 400;
+    /**
+     * Tag for the Fruit GameObject
+     */
     public static final String FRUIT = "Fruit";
 
     // Fields
