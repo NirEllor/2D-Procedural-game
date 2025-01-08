@@ -22,10 +22,10 @@ public class Cloud {
 
     private static final Color BASE_CLOUD_COLOR = new Color(255, 255, 255);
     private static final int BLOCK_SIZE = 20;
-    private static final int MOVE_FACTOR = 1;
+    private static final int MOVE_FACTOR = 3;
     private static final float INITIAL_VALUE = 0f;
-    private static final float END_VALUE = 1f;
     private static final float TRANSITION_TIME = 3f;
+    public static final int STARTING_POINT = -100;
     private static final int[][] cloudShape = new int[][]{
             {0, 1, 1, 0, 0, 0},
             {1, 1, 1, 0, 1, 0},
@@ -37,6 +37,7 @@ public class Cloud {
     /** Tag for cloud objects */
     public static final String CLOUD = "cloud";
 
+
     /**
      * Method to create a cloud composed of multiple blocks.
      * Each block is created at a specific position based on the cloud shape.
@@ -45,7 +46,7 @@ public class Cloud {
      * @param seed Random seed to control delays in cloud block movement.
      * @return ArrayList<GameObject> containing all blocks of the cloud.
      */
-    public static ArrayList<GameObject> createCloud(Vector2 position, int seed) {
+    public static ArrayList<GameObject> createCloud(Vector2 position, int seed, Vector2 windowDimensions) {
         ArrayList<GameObject> cloudBlocks = new ArrayList<>();
 
         Random randCloud = new Random(seed);
@@ -53,22 +54,21 @@ public class Cloud {
         // Iterate over the cloud shape array
         for (int row = 0; row < cloudShape.length; row++) {
             for (int col = 0; col < cloudShape[row].length; col++) {
-                if (cloudShape[row][col] == 1) {  // If there's a block at this position
-                    // Create a block at the appropriate position
+                if (cloudShape[row][col] == 1) {
+
                     Vector2 blockPosition = new Vector2(position.x() + col * BLOCK_SIZE,
                             position.y() - row * BLOCK_SIZE);
 
                     GameObject block = new GameObject(blockPosition, new Vector2(BLOCK_SIZE, BLOCK_SIZE),
                             new RectangleRenderable(ColorSupplier.approximateMonoColor(BASE_CLOUD_COLOR)));
 
-                    addDelayedMovement(block, delay);
+                    addDelayedMovement(block, delay, windowDimensions);
 
                     block.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 
                     block.setTag(CLOUD);
 
-
-                    cloudBlocks.add(block);  // Add the block to the cloud
+                    cloudBlocks.add(block);
                 }
             }
         }
@@ -76,30 +76,34 @@ public class Cloud {
         return cloudBlocks;
     }
 
-    private static void cloudMovement(GameObject block) {
+    private static void cloudMovement(GameObject block, Vector2 windowDimensions) {
         new Transition<>(
-                block,  // The object to apply the transition to (the block)
+                block,
                 (Float t) -> {
-                    // This lambda defines how the transition will update the block's position
-                    // 't' represents the time progress of the transition (from 0 to 1)
-                    block.setCenter(new Vector2(block.getCenter().x() + MOVE_FACTOR,
-                            block.getCenter().y()));
+                    float newX = block.getCenter().x() + MOVE_FACTOR;
+
+                    if (newX > windowDimensions.x()) {
+                        newX = STARTING_POINT;
+                    }
+
+                    block.setCenter(new Vector2(newX, block.getCenter().y()));
                 },
-                INITIAL_VALUE,  // Starting value for the transition
-                END_VALUE,  // Ending value for the transition (progress from 0 to 1)
-                Transition.LINEAR_INTERPOLATOR_FLOAT,  // The interpolation function (linear interpolation)
-                TRANSITION_TIME,  // Duration of the transition in seconds (move every 3 seconds)
-                Transition.TransitionType.TRANSITION_LOOP,  // Loop the transition continuously
-                null  // No additional logic on completion
+                INITIAL_VALUE,
+                windowDimensions.x(),
+                Transition.LINEAR_INTERPOLATOR_FLOAT,
+                TRANSITION_TIME,
+                Transition.TransitionType.TRANSITION_LOOP,
+                null
         );
     }
 
-    private static void addDelayedMovement(GameObject block, float delay) {
+
+    private static void addDelayedMovement(GameObject block, float delay, Vector2 windowDimensions) {
         new ScheduledTask(
                 block,
                 delay,
                 false,
-                () -> cloudMovement(block)
+                () -> cloudMovement(block, windowDimensions)
         );
     }
 }

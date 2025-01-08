@@ -46,10 +46,8 @@ public class PepseGameManager extends GameManager {
     private static final float FINISH_TIME = 0f;
     private static final float DELAY = 2f;
     private static final int BOUND = 5;
-    private static final int X_CLOUD = -400;
+    private static final int X_CLOUD = -500;
     private static final int ONE_HUNDRED = 100;
-    private static final int THREE = 3;
-    private static final int NUMBER_OF_CLOUDS = 12;
     private static final int THIRTY = 30;
     private static final int THREE_HUNDRED = 300;
     private static final int FORTY = 40;
@@ -141,8 +139,9 @@ public class PepseGameManager extends GameManager {
     private void createClouds() {
         allClouds = new ArrayList<>();
         ArrayList<GameObject> cloud;
-        for (int i = 0; i < NUMBER_OF_CLOUDS; i++) {
-            cloud = Cloud.createCloud(new Vector2(X_CLOUD * (i), ONE_HUNDRED * (i % THREE + 1)), seed);
+        for (int i = 0; i < 3; i++) {
+            cloud = Cloud.createCloud(new Vector2(X_CLOUD * (i), ONE_HUNDRED * (i + 1)), seed,
+                    windowDimensions);
             allClouds.add(cloud);
             for (GameObject obj : cloud) {
                 gameObjects().addGameObject(obj, Layer.BACKGROUND);
