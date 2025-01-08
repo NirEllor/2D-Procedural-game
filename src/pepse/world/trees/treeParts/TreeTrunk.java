@@ -12,6 +12,9 @@ public class TreeTrunk extends Block {
     // Constants
     private static final int TRUNK_WIDTH = 40;
     private static final int TRUNK_HEIGHT = 100;
+    /**
+     * A tag for the TreeTrunk GameObject
+     */
     public static final String TREE_TRUNK = "TreeTrunk";
 
     /**
