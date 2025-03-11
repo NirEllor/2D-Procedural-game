@@ -1,8 +1,6 @@
 Ellor Waizner Nir, Pikman Yuli 
 
-=============================
 =   Classes description   =
-=============================
 
 Sky - creates the sky
 
@@ -14,9 +12,7 @@ SunHalo - Creates the sun halo
 
 The four classes were built according to the instructions of the exercise
 
-===========================================
 = Trees package classes + Design Patterns =
-===========================================
 
 We chose to use the principle of encapsulation and create separate departments with
 their own responsibilities.
@@ -51,9 +47,8 @@ in light of the weeks on which the exercise is based.
 We will also note that our classes use transitions as we will learn in the other parts
 of the exercise.
 
-=============================
+
 =   Cloud Design Patterns   =
-=============================
 
 The **Cloud** class uses several design patterns:
 1. **Factory Method**: `createCloud` generates a cloud by creating multiple blocks based
@@ -68,9 +63,7 @@ cloud blocks.
 5. **Observer**: `ScheduledTask` triggers cloud block movement after a delay,
 responding to time-based events.
 
-=============================
 =   Other Design Patterns   =
-=============================
 
 As written in the instructions, the sky, night, sun and sun halo classes are separate
 classes and have a static
